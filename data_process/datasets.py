@@ -52,3 +52,6 @@ class MyDatasets():
         output_dataset = load_dataset("json", data_files=output_datafile)
 
         return input_dataset, output_dataset
+    
+    def tokenization(self, tokenizer):
+        pass

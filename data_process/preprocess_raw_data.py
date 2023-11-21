@@ -59,7 +59,7 @@ class PreprocessRawData():
         
         from retrival_models import BM25
         metrics = BM25.bm25_score
-        self.modified_dataset = self.input_dataset.map(lambda x: retrieved_userprofile(x,metrics=metrics), num_proc=8, remove_columns=['profile'])
+        self.modified_dataset = self.input_dataset.map(lambda x: retrieved_userprofile(x,metrics=metrics), num_proc=24, remove_columns=['profile'])
 
         print('The keys after processing are: {}'.format(self.modified_dataset['train'][0].keys()))
 
