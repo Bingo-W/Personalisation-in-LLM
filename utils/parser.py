@@ -69,3 +69,27 @@ class TrainingArguments:
             'help': 'the Huggingface ID of the pre-trained model'
         }
     )
+
+    task_max_length: int = field(
+        default=256,
+        metadata={
+            'help': 'the max length of the task input'
+        }
+    )
+    input_max_length: int = field(
+        default=512,
+        metadata={
+            'help': 'the max length of the input tokens sequence'
+        }
+    )
+
+    output_max_length: int = field(
+        default=512,
+        metadata={
+            'help': 'the max length of the output tokens sequence'
+        }
+    )
+
+    result_dir: str = field(
+        default='../personalised_results/results'
+    )

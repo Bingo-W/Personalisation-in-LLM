@@ -52,7 +52,7 @@ class PreprocessRawData():
             # compute the scores
             scores = [metrics(query, item, user_profile_corpus) for item in user_profile_corpus]
             retrieved_index = scores.index(max(scores))
-            example['retrieved_profile'] = example['profile'][retrieved_index]
+            example['retrieved_profile'] = [example['profile'][retrieved_index]]
 
 
             return example
