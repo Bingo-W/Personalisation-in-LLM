@@ -3,7 +3,7 @@ import evaluate
 
 def text_accuarcy(preds:list, labels:list):
 
-    assert (len(preds) != len(labels))
+    assert (len(preds) == len(labels))
     match_num = 0
     for pred, label in zip(preds, labels):
         if pred == label:

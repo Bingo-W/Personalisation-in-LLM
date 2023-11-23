@@ -53,8 +53,8 @@ def main():
     # define the training hyper-parameters
     running_args = Seq2SeqTrainingArguments(
         output_dir=output_dir,
-        per_device_train_batch_size=8,
-        per_device_eval_batch_size=8,
+        per_device_train_batch_size=6,
+        per_device_eval_batch_size=6,
         predict_with_generate=True,
         generation_num_beams=4,
         fp16=True,
