@@ -1,4 +1,5 @@
 import re
+import math
 
 def contact(profile_entries, join_words = ", and "):
         
@@ -30,9 +31,19 @@ class LaMP1Prompt():
         profile_entities = []
         for item in profile:
             
-            trim_profile_tokens = tokenizer.encode(add_double_quote(item['title']))[:int(max_profile_length)]
-            trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
-            profile_entities.append(trim_profile_text)
+            final_profle = add_double_quote(item['title'])
+            original_profile_tokens = tokenizer.encode(final_profle)
+            
+            if len(original_profile_tokens) > max_profile_length:
+                trim_length = math.ceil(len(original_profile_tokens)-max_profile_length)
+                trim_text_tokens = tokenizer.encode(item['title'])[:-trim_length]
+                trim_profile = tokenizer.decode(trim_text_tokens[:-1])
+            else:
+                trim_profile = item['title']
+
+
+            trim_final_profile = add_double_quote(trim_profile)
+            profile_entities.append(trim_final_profile)
 
         return profile_entities
     
@@ -78,13 +89,42 @@ class LaMP2Prompt():
         
         profile_entities = []
         for item in profile:
+            
             final_profile = 'the category for the article:' + add_double_quote(item['text']) + ' is ' + add_double_quote(item['category'])
-            trim_profile_tokens = tokenizer.encode(final_profile)[:int(max_profile_length)]
-            trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
-            profile_entities.append(trim_profile_text)
+            original_profile_tokens = tokenizer.encode(final_profile)
+            if len(original_profile_tokens) > max_profile_length:
+                trim_length = math.ceil(len(original_profile_tokens)-max_profile_length)
+                trim_text_tokens = tokenizer.encode(item['text'])[:-trim_length]
+                trim_profile = tokenizer.decode(trim_text_tokens[:-1])
+            else:
+                trim_profile = item['text']
+            
+            trim_final_profile = 'the category for the article:' + add_double_quote(trim_profile) + ' is ' + add_double_quote(item['category'])
+            #trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
+            profile_entities.append(trim_final_profile)
         
         return profile_entities
 
     def __merge_profile_and_input(self, original_string, additional_string):
 
         return additional_string + '. ' + original_string
+
+class LaMP3Prompt():
+    def __init__(self) -> None:
+        pass
+
+class LaMP4Prompt():
+    def __init__(self) -> None:
+        pass
+
+class LaMP5Prompt():
+    def __init__(self) -> None:
+        pass
+
+class LaMP6Prompt():
+    def __init__(self) -> None:
+        pass
+
+class LaMP7Prompt():
+    def __init__(self) -> None:
+        pass
