@@ -1,9 +1,13 @@
 from collections import OrderedDict
-from .lamp_metrics import LaMP1_metrics
+from .lamp_metrics import (
+    LaMP1_metrics, 
+    LaMP2_metrics
+)
         
 TASK_MAPPING = OrderedDict(
     [
         ('LaMP_1', LaMP1_metrics),
+        ('LaMP_2', LaMP2_metrics),
     ]
 )
 

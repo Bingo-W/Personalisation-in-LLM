@@ -47,10 +47,24 @@ class DataArguments:
     )
 
     retrieval_id : str = field(
-        default='bm25_score',
+        default='BM25',
         metadata={
             'help': 'the retrieval method for user profiles',
-            'choices': ('bm25_score')
+            'choices': ('BM25')
+        }
+    )
+
+    process_batch_size: int = field(
+        default=1000,
+        metadata={
+            'help': 'the hyparameter for debugging'
+        }
+    )
+
+    process_num: int = field(
+        default=24,
+        metadata={
+            'help': 'the hyparameter for debugging'
         }
     )
 
