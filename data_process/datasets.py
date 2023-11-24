@@ -15,7 +15,7 @@ class MyDatasets():
         self._task_path = os.path.join(self._raw_data_folder_path, self._task_pattern, self._task_name)
 
         if 'LaMP' in self._task_name:
-            self._train_input_filename = 'train_questions.json'  
+            self._train_input_filename = 'train_questions.json' if self._task_name != 'LaMP_3' else 'train_questions.jsonl'
             self._test_input_filename = 'dev_questions.json'
             self._train_output_filename = 'train_outputs.json'
             self._test_output_filename = 'dev_outputs.json'
@@ -72,6 +72,16 @@ class MyDatasets():
             from .lamp_prompt import LaMP1Prompt as PromptClass
         elif self._task_name == 'LaMP_2':
             from .lamp_prompt import LaMP2Prompt as PromptClass
+        elif self._task_name == 'LaMP_3':
+            from .lamp_prompt import LaMP3Prompt as PromptClass
+        elif self._task_name == 'LaMP_4':
+            from .lamp_prompt import LaMP4Prompt as PromptClass
+        elif self._task_name == 'LaMP_5':
+            from .lamp_prompt import LaMP5Prompt as PromptClass
+        elif self._task_name == 'LaMP_6':
+            from .lamp_prompt import LaMP6Prompt as PromptClass
+        elif self._task_name == 'LaMP_7':
+            from .lamp_prompt import LaMP7Prompt as PromptClass
         else:
             raise Exception(f"These is no available preprocess function for the task.")
 

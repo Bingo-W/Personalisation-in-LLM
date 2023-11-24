@@ -1,5 +1,6 @@
 import numpy as np
 import evaluate
+import math
 
 def text_accuarcy(preds:list, labels:list):
 
@@ -32,9 +33,33 @@ def text_F1(preds:list, labels:list):
     
     return results
 
+def text_MAE(preds:list, labels:list):
+    assert (len(preds) == len(labels))
+
+    transform_preds = [int(item) if len(item)==1 else int(item)[:-4] for item in preds]
+    transform_labels = [int(item) if len(item)==1 else int(item)[:-4] for item in labels]
+
+    mae_metric = evaluate.load("mae")
+    results = mae_metric.compute(predictions=transform_preds, references=transform_labels)
+
+    return results
+
+def text_RMSE(preds:list, labels:list):
+    assert (len(preds) == len(labels))
+
+    transform_preds = [int(item) if len(item)==1 else int(item)[:-4] for item in preds]
+    transform_labels = [int(item) if len(item)==1 else int(item)[:-4] for item in labels]
+
+    mae_metric = evaluate.load("mse")
+    results = mae_metric.compute(predictions=transform_preds, references=transform_labels)
+    rmse_res = math.sqrt(results['mse'])
+
+    return {'rmse', rmse_res}
+
 MATRICS_MAPPING = {
     "LaMP_1": [text_accuarcy],
-    "LaMP_2": [text_accuarcy, text_F1]
+    "LaMP_2": [text_accuarcy, text_F1],
+    "LaMP_3": [text_MAE, text_RMSE],
 }
 
 def LaMP1_postprocess_test(preds, labels):
@@ -82,3 +107,35 @@ def LaMP2_metrics(eval_preds, tokenizer):
         results.update(metric(decoded_preds, decoded_labels))
     
     return results
+
+def LaMP3_metrics(eval_preds, tokenizer):
+    preds, labels = eval_preds
+
+    if isinstance(preds, tuple):
+        preds = preds[0]
+    
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
+    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+    # construct the metrics
+    metrics = MATRICS_MAPPING['LaMP_2']
+
+    results = {}
+    for metric in metrics:
+        results.update(metric(decoded_preds, decoded_labels))
+    
+    return results
+
+def LaMP4_metrics(eval_preds, tokenizer):
+    pass
+
+def LaMP5_metrics(eval_preds, tokenizer):
+    pass
+
+def LaMP6_metrics(eval_preds, tokenizer):
+    pass
+
+def LaMP7_metrics(eval_preds, tokenizer):
+    pass
