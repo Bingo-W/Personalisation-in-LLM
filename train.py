@@ -57,7 +57,7 @@ def main():
         per_device_eval_batch_size=6,
         predict_with_generate=True,
         generation_num_beams=4,
-        fp16=True,
+        fp16=False,
         # optimization details
         learning_rate=5e-5,
         weight_decay=10e-4,
