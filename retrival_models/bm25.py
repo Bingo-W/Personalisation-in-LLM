@@ -72,7 +72,25 @@ def bm25_for_LaMP_3(task_input, profile):
 
 
 def bm25_for_LaMP_4(task_input, profile):
-    pass
+    text = task_input.split('for the following article: ')[-1].strip()
+    query = text.split()
+
+    # exclude the profile related to the input text
+    for i, userprofile in enumerate(profile):
+        if userprofile['text'] == text:
+            profile.pop(i)
+            break
+    
+    # extract the user profile
+    user_profile_corpus = [item['text'].split()+item['title'].split() for item in profile]
+
+    # compute the scores
+    scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
+    retrieved_index = scores.index(max(scores))
+    retrieved_profile = [profile[retrieved_index]]
+
+    return retrieved_profile
+
 
 def bm25_for_LaMP_5(task_input, profile):
     pass

@@ -56,10 +56,24 @@ def text_RMSE(preds:list, labels:list):
 
     return {'rmse', rmse_res}
 
+def text_rouge(preds:list, labels:list):
+    assert (len(preds) == len(labels))
+
+    rouge = evaluate.load('rouge')
+    results = rouge.compute(predictions=preds,
+                            references=labels,
+                            use_aggregator=True)
+    
+    return results
+
 MATRICS_MAPPING = {
     "LaMP_1": [text_accuarcy],
     "LaMP_2": [text_accuarcy, text_F1],
     "LaMP_3": [text_MAE, text_RMSE],
+    "LaMP_4": [text_rouge],
+    "LaMP_5": [text_rouge],
+    "LaMP_6": [text_rouge],
+    "LaMP_7": [text_rouge],
 }
 
 def LaMP1_postprocess_test(preds, labels):
@@ -120,7 +134,7 @@ def LaMP3_metrics(eval_preds, tokenizer):
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
     # construct the metrics
-    metrics = MATRICS_MAPPING['LaMP_2']
+    metrics = MATRICS_MAPPING['LaMP_3']
 
     results = {}
     for metric in metrics:
@@ -129,13 +143,81 @@ def LaMP3_metrics(eval_preds, tokenizer):
     return results
 
 def LaMP4_metrics(eval_preds, tokenizer):
-    pass
+    preds, labels = eval_preds
+
+    if isinstance(preds, tuple):
+        preds = preds[0]
+    
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
+    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+    # construct the metrics
+    metrics = MATRICS_MAPPING['LaMP_4']
+
+    results = {}
+    for metric in metrics:
+        results.update(metric(decoded_preds, decoded_labels))
+    
+    return results
 
 def LaMP5_metrics(eval_preds, tokenizer):
-    pass
+    preds, labels = eval_preds
+
+    if isinstance(preds, tuple):
+        preds = preds[0]
+    
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
+    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+    # construct the metrics
+    metrics = MATRICS_MAPPING['LaMP_5']
+
+    results = {}
+    for metric in metrics:
+        results.update(metric(decoded_preds, decoded_labels))
+    
+    return results
 
 def LaMP6_metrics(eval_preds, tokenizer):
-    pass
+    preds, labels = eval_preds
+
+    if isinstance(preds, tuple):
+        preds = preds[0]
+    
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
+    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+    # construct the metrics
+    metrics = MATRICS_MAPPING['LaMP_6']
+
+    results = {}
+    for metric in metrics:
+        results.update(metric(decoded_preds, decoded_labels))
+    
+    return results
 
 def LaMP7_metrics(eval_preds, tokenizer):
-    pass
+    preds, labels = eval_preds
+
+    if isinstance(preds, tuple):
+        preds = preds[0]
+    
+    decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+
+    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+    decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+    # construct the metrics
+    metrics = MATRICS_MAPPING['LaMP_7']
+
+    results = {}
+    for metric in metrics:
+        results.update(metric(decoded_preds, decoded_labels))
+    
+    return results

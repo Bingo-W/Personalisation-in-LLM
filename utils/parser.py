@@ -107,3 +107,7 @@ class TrainingArguments:
     result_dir: str = field(
         default='../personalised_results/results'
     )
+
+    training_epoch: int = field(
+        default=10,
+    )

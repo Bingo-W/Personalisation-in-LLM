@@ -62,7 +62,7 @@ def main():
         learning_rate=5e-5,
         weight_decay=10e-4,
         warmup_ratio=0.05,
-        num_train_epochs=10,
+        num_train_epochs=training_args.training_epoch,
         logging_dir=os.path.join(output_dir, 'logs'),
         logging_strategy='steps',
         logging_steps=500,
