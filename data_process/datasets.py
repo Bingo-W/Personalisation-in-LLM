@@ -79,7 +79,8 @@ class MyDatasets():
         elif self._task_name == 'LaMP_5':
             from .lamp_prompt import LaMP5Prompt as PromptClass
         elif self._task_name == 'LaMP_6':
-            from .lamp_prompt import LaMP6Prompt as PromptClass
+            #from .lamp_prompt import LaMP6Prompt as PromptClass
+            raise ValueError('We cannot obtain the access to the dataset')
         elif self._task_name == 'LaMP_7':
             from .lamp_prompt import LaMP7Prompt as PromptClass
         else:

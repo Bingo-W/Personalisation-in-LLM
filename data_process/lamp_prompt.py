@@ -286,3 +286,42 @@ class LaMP6Prompt():
 class LaMP7Prompt():
     def __init__(self) -> None:
         pass
+
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+        """
+        To merge the task input and the user profile into the modified input
+        """
+        max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
+        profile_prompt = contact(
+            self.__per_profile_entity_prompt(
+                retrieved_profile, 
+                tokenizer, 
+                max_profile_length)
+        )
+
+        final_input_text = self.__merge_profile_and_input(input, profile_prompt)
+        return final_input_text
+
+    def __per_profile_entity_prompt(self, profile, tokenizer, max_profile_length):
+        
+        profile_entities = []
+        for item in profile:
+            
+            final_profile = add_double_quote(item['text'])
+            original_profile_tokens = tokenizer.encode(final_profile)
+            if len(original_profile_tokens) > max_profile_length:
+                trim_length = math.ceil(len(original_profile_tokens)-max_profile_length)
+                trim_text_tokens = tokenizer.encode(item['text'])[:-trim_length]
+                trim_profile = tokenizer.decode(trim_text_tokens[:-1])
+            else:
+                trim_profile = item['text']
+            
+            trim_final_profile = add_double_quote(item['text'])
+            #trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
+            profile_entities.append(trim_final_profile)
+        
+        return profile_entities
+
+    def __merge_profile_and_input(self, original_string, additional_string):
+
+        return additional_string + ' are written by a person. Following the given patterns ' + original_string
