@@ -98,7 +98,7 @@ def bm25_for_LaMP_5(task_input, profile):
 
     # exclude the profile related to the input text
     for i, userprofile in enumerate(profile):
-        if userprofile['text'] == text:
+        if userprofile['abstract'] == text:
             profile.pop(i)
             break
     
