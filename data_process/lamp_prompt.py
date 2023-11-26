@@ -162,7 +162,7 @@ class LaMP4Prompt():
         """
         To merge the task input and the user profile into the modified input
         """
-        max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
+        max_profile_length = (max_input_len-max_task_len-5)/len(retrieved_profile)
         profile_prompt = contact(
             self.__per_profile_entity_prompt(
                 retrieved_profile, 
@@ -291,7 +291,7 @@ class LaMP7Prompt():
         """
         To merge the task input and the user profile into the modified input
         """
-        max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
+        max_profile_length = (max_input_len-max_task_len-10)/len(retrieved_profile)
         profile_prompt = contact(
             self.__per_profile_entity_prompt(
                 retrieved_profile, 
