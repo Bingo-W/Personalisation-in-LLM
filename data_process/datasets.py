@@ -1,6 +1,7 @@
 import os
-from datasets import load_dataset
+from datasets import load_dataset, concatenate_datasets
 from retrival_models import AutoRetrieval
+import random
 
 class MyDatasets():
 
@@ -97,10 +98,17 @@ class MyDatasets():
         # modified the input according to the predefined prompt
         def preprocess_function(sample, padding='max_length'):
             
-            sample['retrieved_profile'] = [
-                retrieval_fn(task_input, user_profile, self._retrieval_num) \
-                for task_input, user_profile in zip(sample['input'], sample['profile'])
-            ]
+            if self._retrieval_id == 'Full_Random':
+                random_user_profile = random.choice(concatenate_datasets([self._datasets['train'], self._datasets['train']]))['profile']
+                sample['retrieved_profile'] = [
+                    retrieval_fn(task_input, random_user_profile, self._retrieval_num) \
+                    for task_input, user_profile in zip(sample['input'], sample['profile'])
+                ]
+            else:
+                sample['retrieved_profile'] = [
+                    retrieval_fn(task_input, user_profile, self._retrieval_num) \
+                    for task_input, user_profile in zip(sample['input'], sample['profile'])
+                ]
 
             modified_input = [
                 prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length)

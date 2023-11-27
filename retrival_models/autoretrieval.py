@@ -6,6 +6,7 @@ IR_METHOD_MAPPING = OrderedDict(
     [
         ('BM25', build_bm25_fn),
         ('Random', build_random_fn),
+        ('Full_Random', build_random_fn)
     ]
 )
 
