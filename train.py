@@ -50,6 +50,7 @@ def main():
 
 
     output_dir = output_dir_generation(data_args, training_args)
+    print(output_dir)
     # define the training hyper-parameters
     running_args = Seq2SeqTrainingArguments(
         output_dir=output_dir,

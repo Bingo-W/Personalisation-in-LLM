@@ -13,6 +13,9 @@ def output_dir_generation(data_args, training_args):
     # add the task name
     output_dir = os.path.join(output_dir, data_args.task_pattern, data_args.task_name)
 
+    # add the retrieval number
+    output_dir = os.path.join(output_dir, str(data_args.retrieval_num))
+
     return output_dir
 
 

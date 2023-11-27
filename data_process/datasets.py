@@ -8,6 +8,7 @@ class MyDatasets():
         self._task_name = data_args.task_name
         self._task_pattern = data_args.task_pattern
         self._retrieval_id = data_args.retrieval_id
+        self._retrieval_num = data_args.retrieval_num
         self._raw_data_folder_path = data_args.raw_data_folder_path
         self._data_folder_path = data_args.data_folder_path
         self._data_args = data_args
@@ -97,7 +98,7 @@ class MyDatasets():
         def preprocess_function(sample, padding='max_length'):
             
             sample['retrieved_profile'] = [
-                retrieval_fn(task_input, user_profile) \
+                retrieval_fn(task_input, user_profile, self._retrieval_num) \
                 for task_input, user_profile in zip(sample['input'], sample['profile'])
             ]
 

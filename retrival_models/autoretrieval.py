@@ -1,9 +1,11 @@
 from collections import OrderedDict
 from .bm25 import build_bm25_fn
+from .random_selection import build_random_fn
 
 IR_METHOD_MAPPING = OrderedDict(
     [
         ('BM25', build_bm25_fn),
+        ('Random', build_random_fn),
     ]
 )
 

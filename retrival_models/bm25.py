@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from .utils import extract_quote
 
-def bm25_for_LaMP_1(task_input, profile):
+def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1):
     
     # extract the words from the non-template part of the sentence
     query, input_title = query_extract(task_input)
@@ -20,12 +20,17 @@ def bm25_for_LaMP_1(task_input, profile):
     
     # compute the scores
     scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
-    retrieved_index = scores.index(max(scores))
-    retrieved_profile = [profile[retrieved_index]]
+    sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    
+    # construct the list
+    retrieved_profile = []
+    for index in retrieved_index:
+        retrieved_profile.append(profile[index])
 
     return retrieved_profile
 
-def bm25_for_LaMP_2(task_input, profile):
+def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1):
 
     # extract the words from the non-template part of the sentence
     text = task_input.split('article:')[-1].strip()
@@ -41,14 +46,19 @@ def bm25_for_LaMP_2(task_input, profile):
     user_profile_corpus = [item['text'].split()+item['title'].split()+item['category'].split() for item in profile]
     # compute the scores
     scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
-    retrieved_index = scores.index(max(scores))
-    retrieved_profile = [profile[retrieved_index]]
+    sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    
+    # construct the list
+    retrieved_profile = []
+    for index in retrieved_index:
+        retrieved_profile.append(profile[index])
 
     return retrieved_profile
 
     
 
-def bm25_for_LaMP_3(task_input, profile):
+def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1):
     
     # extract the words from the non-template part of the sentence
     text = task_input.split('just answer with 1, 2, 3, 4, or 5 without further explanation. review:')[-1].strip()
@@ -65,13 +75,18 @@ def bm25_for_LaMP_3(task_input, profile):
 
     # compute the scores
     scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
-    retrieved_index = scores.index(max(scores))
-    retrieved_profile = [profile[retrieved_index]]
+    sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    
+    # construct the list
+    retrieved_profile = []
+    for index in retrieved_index:
+        retrieved_profile.append(profile[index])
 
     return retrieved_profile
 
 
-def bm25_for_LaMP_4(task_input, profile):
+def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1):
     text = task_input.split('for the following article: ')[-1].strip()
     query = text.split()
 
@@ -86,13 +101,18 @@ def bm25_for_LaMP_4(task_input, profile):
 
     # compute the scores
     scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
-    retrieved_index = scores.index(max(scores))
-    retrieved_profile = [profile[retrieved_index]]
+    sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    
+    # construct the list
+    retrieved_profile = []
+    for index in retrieved_index:
+        retrieved_profile.append(profile[index])
 
     return retrieved_profile
 
 
-def bm25_for_LaMP_5(task_input, profile):
+def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1):
     text = task_input.split('the following abstract of a paper: ')[-1].strip()
     query = text.split()
 
@@ -107,15 +127,20 @@ def bm25_for_LaMP_5(task_input, profile):
 
     # compute the scores
     scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
-    retrieved_index = scores.index(max(scores))
-    retrieved_profile = [profile[retrieved_index]]
+    sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    
+    # construct the list
+    retrieved_profile = []
+    for index in retrieved_index:
+        retrieved_profile.append(profile[index])
 
     return retrieved_profile
 
-def bm25_for_LaMP_6(task_input, profile):
+def bm25_for_LaMP_6(task_input, profile, retrieve_num = 1):
     pass
 
-def bm25_for_LaMP_7(task_input, profile):
+def bm25_for_LaMP_7(task_input, profile, retrieve_num = 1):
     text = task_input.split('the following tweet without any explanation before or after it: ')[-1].strip()
     query = text.split()
 
@@ -130,8 +155,13 @@ def bm25_for_LaMP_7(task_input, profile):
 
     # compute the scores
     scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
-    retrieved_index = scores.index(max(scores))
-    retrieved_profile = [profile[retrieved_index]]
+    sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    
+    # construct the list
+    retrieved_profile = []
+    for index in retrieved_index:
+        retrieved_profile.append(profile[index])
 
     return retrieved_profile
 
