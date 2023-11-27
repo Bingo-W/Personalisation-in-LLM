@@ -33,6 +33,9 @@ class MyDatasets():
 
         assert(os.path.exists(self._task_path))
         self._datasets = self.__load_dataset()
+
+        if self._retrieval_id == 'Full_Random':
+            self._user_pro = self.__compute_user_pro()
     
     def __load_dataset(self,):
         """
@@ -62,6 +65,20 @@ class MyDatasets():
 
 
         return input_dataset
+    
+    def __compute_user_pro(self):
+        """
+        compute the sampling probability of all users according to their number of the profile
+        """
+        user_pro = []
+        for user in concatenate_datasets([self._datasets['train'], self._datasets['test']]):
+            user_pro.append(len(user['profile']))
+
+        total_num = sum(user_pro)
+        user_pro = [item/total_num for item in user_pro]
+
+        return user_pro
+        
     
     def tokenization(self, tokenizer, training_args):
         """
@@ -99,7 +116,7 @@ class MyDatasets():
         def preprocess_function(sample, padding='max_length'):
             
             if self._retrieval_id == 'Full_Random':
-                random_user_profile = random.choice(concatenate_datasets([self._datasets['train'], self._datasets['train']]))['profile']
+                random_user_profile = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=1)[0]['profile']
                 sample['retrieved_profile'] = [
                     retrieval_fn(task_input, random_user_profile, self._retrieval_num) \
                     for task_input, user_profile in zip(sample['input'], sample['profile'])
