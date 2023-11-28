@@ -23,6 +23,15 @@ from metrics import(
     build_compute_metrics_fn
 )
 
+MATRICS_MAPPING = {
+    "LaMP_1": ['accuracy'],
+    "LaMP_2": ['accuracy'],
+    "LaMP_3": ['mae'],
+    "LaMP_4": ['rouge1'],
+    "LaMP_5": ['rouge1'],
+    "LaMP_6": ['rouge1'],
+    "LaMP_7": ['rouge1'],
+}
 
 
 def main():
@@ -71,6 +80,7 @@ def main():
         save_strategy='epoch',
         save_total_limit=2,
         load_best_model_at_end=True,
+        metric_for_best_model=MATRICS_MAPPING[data_args.task_name],
         report_to='tensorboard',
     )
 
