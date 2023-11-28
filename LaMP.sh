@@ -1,6 +1,6 @@
 export CUDA_VISIBLE_DEVICES="0"
 
-for RETRIEVAL_NUM in 2 3 4; do
+for RETRIEVAL_NUM in 4; do
     python train.py \
         --task_name 'LaMP_1' \
         --task_pattern 'user-based' \
