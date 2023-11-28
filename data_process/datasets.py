@@ -115,22 +115,27 @@ class MyDatasets():
         # modified the input according to the predefined prompt
         def preprocess_function(sample, padding='max_length'):
             
-            if self._retrieval_id == 'Full_Random':
-                random_user_profile = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=1)[0]['profile']
-                sample['retrieved_profile'] = [
-                    retrieval_fn(task_input, random_user_profile, self._retrieval_num) \
-                    for task_input, user_profile in zip(sample['input'], sample['profile'])
+            if self._retrieval_num != 0:
+                if self._retrieval_id == 'Full_Random':
+                    random_user_profile = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=1)[0]['profile']
+                    sample['retrieved_profile'] = [
+                        retrieval_fn(task_input, random_user_profile, self._retrieval_num) \
+                        for task_input, user_profile in zip(sample['input'], sample['profile'])
+                    ]
+                else:
+                    sample['retrieved_profile'] = [
+                        retrieval_fn(task_input, user_profile, self._retrieval_num) \
+                        for task_input, user_profile in zip(sample['input'], sample['profile'])
+                    ]
+
+                modified_input = [
+                    prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length)
+                    for task_input, retrieved_profile in zip(sample['input'], sample['retrieved_profile'])
                 ]
             else:
-                sample['retrieved_profile'] = [
-                    retrieval_fn(task_input, user_profile, self._retrieval_num) \
-                    for task_input, user_profile in zip(sample['input'], sample['profile'])
+                modified_input = [
+                    item for item in sample['input']
                 ]
-
-            modified_input = [
-                prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length)
-                for task_input, retrieved_profile in zip(sample['input'], sample['retrieved_profile'])
-            ]
             model_inputs = tokenizer(modified_input, max_length=input_max_length, padding=padding, truncation=True)
 
             gold_labels = [item['output'] for item in sample['golds']]
