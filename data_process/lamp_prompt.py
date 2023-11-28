@@ -316,7 +316,7 @@ class LaMP7Prompt():
             else:
                 trim_profile = item['text']
             
-            trim_final_profile = add_double_quote(item['text'])
+            trim_final_profile = add_double_quote(trim_profile)
             #trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
             profile_entities.append(trim_final_profile)
         
