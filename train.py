@@ -24,13 +24,13 @@ from metrics import(
 )
 
 MATRICS_MAPPING = {
-    "LaMP_1": ['accuracy'],
-    "LaMP_2": ['accuracy'],
-    "LaMP_3": ['mae'],
-    "LaMP_4": ['rouge1'],
-    "LaMP_5": ['rouge1'],
-    "LaMP_6": ['rouge1'],
-    "LaMP_7": ['rouge1'],
+    "LaMP_1": 'accuracy',
+    "LaMP_2": 'accuracy',
+    "LaMP_3": 'mae',
+    "LaMP_4": 'rouge1',
+    "LaMP_5": 'rouge1',
+    "LaMP_6": 'rouge1',
+    "LaMP_7": 'rouge1',
 }
 
 
