@@ -16,6 +16,9 @@ def output_dir_generation(data_args, training_args):
     # add the retrieval number
     output_dir = os.path.join(output_dir, str(data_args.retrieval_num))
 
+    if data_args.retrieval_id == 'Random' or data_args.retrieval_id == 'Full_Random':
+        output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
+
     return output_dir
 
 
