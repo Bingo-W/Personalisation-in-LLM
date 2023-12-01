@@ -54,6 +54,13 @@ class DataArguments:
         }
     )
 
+    retrieval_random_seed: int = field(
+        default=1,
+        metadata={
+            'help': 'the random seed to have a constant and reproduceable result.'
+        }
+    )
+
     retrieval_num: int = field(
         default=1,
         metadata={

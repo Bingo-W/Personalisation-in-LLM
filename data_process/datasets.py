@@ -3,12 +3,15 @@ from datasets import load_dataset, concatenate_datasets
 from retrival_models import AutoRetrieval
 import random
 
+from .utils import list_merge
+
 class MyDatasets():
 
     def __init__(self, data_args):
         self._task_name = data_args.task_name
         self._task_pattern = data_args.task_pattern
         self._retrieval_id = data_args.retrieval_id
+        self._random_seed = data_args.retrieval_random_seed
         self._retrieval_num = data_args.retrieval_num
         self._raw_data_folder_path = data_args.raw_data_folder_path
         self._data_folder_path = data_args.data_folder_path
@@ -108,7 +111,10 @@ class MyDatasets():
         task_max_length = training_args.task_max_length
         input_max_length = training_args.input_max_length
         output_max_length = training_args.output_max_length
-        ir_config = {'task_name':self._task_name}
+        ir_config = {
+            'task_name':self._task_name,
+            'random_seed': self._random_seed
+        }
         retrieval_fn = AutoRetrieval.get(self._retrieval_id, ir_config)
         prompt_constructor = PromptClass()
 
@@ -117,11 +123,20 @@ class MyDatasets():
             
             if self._retrieval_num != 0:
                 if self._retrieval_id == 'Full_Random':
-                    random_user_profile = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=1)[0]['profile']
-                    sample['retrieved_profile'] = [
-                        retrieval_fn(task_input, random_user_profile, self._retrieval_num) \
-                        for task_input, user_profile in zip(sample['input'], sample['profile'])
-                    ]
+                    random.seed(self._random_seed)
+                    random_users = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=len(sample['input'])*self._retrieval_num)
+
+                    random_user_profles = []
+                    for index_ in range(len(sample['input'])):
+                        user_profiles_pool = []
+                        begin_index = index_*self._retrieval_num
+                        end_index = (index_+1)*self._retrieval_num
+                        for random_user in random_users[begin_index: end_index]:
+                            user_profiles_pool.extend(random_user['profile'])
+                        
+                        random_user_profles.append(retrieval_fn(None, user_profiles_pool, self._retrieval_num))
+                        
+                    sample['retrieved_profile'] = random_user_profles
                 else:
                     sample['retrieved_profile'] = [
                         retrieval_fn(task_input, user_profile, self._retrieval_num) \

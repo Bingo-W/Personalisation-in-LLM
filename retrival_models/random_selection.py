@@ -17,4 +17,5 @@ BM25_MAPPING = OrderedDict(
 
 def build_random_fn(config):
     
+    random.seed(config['random_seed'])
     return random_in_user
