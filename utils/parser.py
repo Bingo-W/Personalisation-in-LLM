@@ -1,5 +1,6 @@
 from transformers import HfArgumentParser
 from dataclasses import dataclass, field
+from typing import Optional
 
 def create_own_argument():
     parser = HfArgumentParser((DataArguments, TrainingArguments))
@@ -35,7 +36,7 @@ class DataArguments:
     raw_data_folder_path: str = field(
         default='../../data/LaMP',
         metadata={
-            'help': 'the path to the raw data folder'
+            'help': 'the path to the raw data foldeß'
         }
     )
 
@@ -95,6 +96,13 @@ class TrainingArguments:
         default = 'google/flan-t5-base',
         metadata = {
             'help': 'the Huggingface ID of the pre-trained model'
+        }
+    )
+
+    model_checkpoint : Optional[str] = field(
+        default=None,
+        metadata={
+            'help': 'the name of the checkpoint'
         }
     )
 

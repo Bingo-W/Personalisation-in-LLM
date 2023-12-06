@@ -22,3 +22,25 @@ def output_dir_generation(data_args, training_args):
     return output_dir
 
 
+def checkpoint_file_generation(output_dir):
+
+    if not os.path.exists(output_dir):
+        raise ValueError("The result for this task does not exist.")
+    all_files = os.listdir(output_dir)
+    checkpoints_file = []
+
+    # filter out the non-checkpoint
+    for item in all_files:
+        if 'checkpoint' in item:
+            checkpoints_file.append(item)
+
+    # find the best checkpoint
+    best_step = int(checkpoints_file[0].split('-')[-1])
+    best_checkpoint = checkpoints_file[0]
+
+    for checkpoins in checkpoints_file:
+        if int(checkpoins.split('-')[-1]) < best_step:
+            best_checkpoint = checkpoins
+            best_step = int(checkpoins.split('-')[-1])
+    
+    return os.path.join(output_dir, best_checkpoint)

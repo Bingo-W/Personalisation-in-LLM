@@ -20,7 +20,8 @@ from transformers import(
 
 from utils import (
     create_own_argument,
-    output_dir_generation
+    output_dir_generation,
+    checkpoint_file_generation
 )
 
 from metrics import(
@@ -32,16 +33,74 @@ def main():
     data_args, training_args = create_own_argument()
 
     output_dir = output_dir_generation(data_args, training_args)
-    model = AutoModelForSeq2SeqLM.from_pretrained(os.path.join(output_dir, 'checkpoint-1614'))
 
     # load the dataset
     my_datasets = MyDatasets(data_args)
-
     # tokenize the dataset
     tokenizer = AutoTokenizer.from_pretrained(training_args.model_id)
     tokenized_dataset = my_datasets.tokenization(tokenizer, training_args)
 
-    # load the pre-trained model
+    # load the model and the metrics
+    checkpoint_name = os.path.join(output_dir, training_args.model_checkpoint) if training_args.model_checkpoint is not None else checkpoint_file_generation(output_dir)
+    model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint_name)
+    metrics_fn = build_compute_metrics_fn(data_args.task_name)
+    label_pad_toke_id = -100
+    data_collator = DataCollatorForSeq2Seq(
+        tokenizer=tokenizer,
+        model=model,
+        label_pad_token_id=label_pad_toke_id,
+        pad_to_multiple_of=8
+    )
+
+
+    
+
+    # set the computing argus
+    eval_out_dir = os.path.join(output_dir, 'eval')
+    running_args = Seq2SeqTrainingArguments(
+        output_dir=eval_out_dir,
+        per_device_eval_batch_size=6,
+        predict_with_generate=True,
+        generation_num_beams=4,
+        fp16=False,
+        # optimization details
+        # learning_rate=5e-5,
+        # weight_decay=10e-4,
+        # warmup_ratio=0.05,
+        # num_train_epochs=training_args.training_epoch,
+        # logging_dir=os.path.join(eval_out_dir, 'logs'),
+        # logging_strategy='steps',
+        # logging_steps=500,
+        # evaluation_strategy='epoch',
+        # save_strategy='epoch',
+        # save_total_limit=2,
+        # load_best_model_at_end=True,
+        # metric_for_best_model=MATRICS_MAPPING[data_args.task_name],
+        # report_to='tensorboard',
+    )
+
+    trainer = Seq2SeqTrainer(
+        model = model,
+        args = running_args,
+        data_collator= data_collator,
+        train_dataset=tokenized_dataset["train"],
+        eval_dataset=tokenized_dataset["test"],
+        compute_metrics=lambda x: metrics_fn(x, tokenizer),
+    )
+
+    # For evaluation
+    trainer.evaluate()
+
+    # For prediction
+    prediction = trainer.predict(tokenized_dataset["test"])
+
+    '''
+    There are some useful attribution in the prediction
+    .prediction (np.array): the prediction results
+    .labe_ids (np.array): the label in the dataset
+    .metrics (np.array): the score based on the metrics_fn
+    .idxs (np.array): the index
+    '''
 
 
 if __name__ == '__main__':
