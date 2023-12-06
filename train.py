@@ -95,7 +95,11 @@ def main():
         compute_metrics=lambda x: metrics_fn(x, tokenizer),
     )
 
-    trainer.train()
+    if training_args.do_train:
+        trainer.train()
+
+    if training_args.do_eval:
+        trainer.evaluate()
 
 if __name__ == '__main__':
     main()

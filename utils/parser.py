@@ -6,6 +6,11 @@ def create_own_argument():
     parser = HfArgumentParser((DataArguments, TrainingArguments))
     data_args, training_args = parser.parse_args_into_dataclasses()
     
+    # check the hyperparameter
+    if training_args.model_id == 'google/flan-t5-xxl':
+        training_args.do_train = False
+        training_args.do_eval = True
+
     return data_args, training_args
 
 @dataclass
@@ -132,4 +137,25 @@ class TrainingArguments:
 
     training_epoch: int = field(
         default=10,
+    )
+
+    do_train: bool = field(
+        default=True,
+        metadata={
+            'help': 'denoting whether it need training'
+        }
+    )
+
+    do_eval: bool = field(
+        default=False,
+        metadata={
+            'help': 'denoting whether it need evaluation'
+        }
+    )
+
+    do_predict: bool = field(
+        default=False,
+        metadata={
+            'help': 'denoting whether it need prediction'
+        }
     )
