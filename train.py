@@ -99,7 +99,11 @@ def main():
         trainer.train()
 
     if training_args.do_eval:
-        trainer.evaluate()
+        eval_results = trainer.evaluate()
+        output_file_path = os.path.join(output_dir, "evaluation_results.txt")
+        with open(output_file_path, "w") as file:
+            for metric_name, metric_value in eval_results.items():
+                file.write(f"{metric_name}: {metric_value}\n")
 
 if __name__ == '__main__':
     main()
