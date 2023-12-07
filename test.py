@@ -4,6 +4,7 @@ This file is constructed to test the existing pre-trained model
 
 # the public libs
 import os
+import json
 
 # the self-defined libs
 from data_process import(
@@ -89,10 +90,35 @@ def main():
     )
 
     # For evaluation
-    trainer.evaluate()
+    if training_args.do_eval:
+        trainer.evaluate()
 
     # For prediction
-    prediction = trainer.predict(tokenized_dataset["test"])
+    if training_args.do_predict:
+        predictions = trainer.predict(tokenized_dataset["test"])
+    
+    model_outputs = predictions.predictions
+    label_ids = predictions.label_ids
+
+
+    output_data = []
+
+    for output, label_id in zip(model_outputs, label_ids):       
+
+        # Save relevant information to a dictionary
+        prediction_info = {
+            "true_label": label_id,
+            "predicted": output,
+        }
+
+        output_data.append(prediction_info)
+
+    # Save the output to a JSON file
+    output_file_path = os.path.join(eval_out_dir, "predictions.json")
+    with open(output_file_path, "w") as file:
+        json.dump(output_data, file, indent=2)
+
+    print(f"Predictions saved to {output_file_path}")
 
     '''
     There are some useful attribution in the prediction
