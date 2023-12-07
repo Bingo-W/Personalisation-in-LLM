@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from collections import OrderedDict
+from collections import OrderedDict, Counter
 
 from .utils import extract_quote
 
@@ -74,7 +74,15 @@ def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1):
     user_profile_corpus = [item['text'].split()+item['score'].split() for item in profile]
 
     # compute the scores
-    scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
+    doc_freq = Counter()
+    for doc in user_profile_corpus:
+        doc_set = set(doc)
+        doc_freq.update(doc_set)
+
+    total_docs = len(user_profile_corpus)
+    len_doc_corpus_mean = np.mean(np.array([len(doc) for doc in user_profile_corpus]))
+    scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
+    
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
     
@@ -207,6 +215,27 @@ def bm25_score(query, document, corpus, k1=1.5, b=0.75):
         score += idf * term_score
 
     return score
+
+def bm25_score_np(query, document, total_docs, doc_freq, len_doc_corpus_mean, k1=1.5, b=0.75):
+    def idf(total_docs, doc_freq, term):
+        idf = np.log((total_docs - doc_freq[term] + 0.5) / (doc_freq[term] + 0.5) + 1.0)
+        return idf
+    
+    query_terms, query_counts = np.unique(query, return_counts=True)
+    document_terms, document_counts = np.unique(document, return_counts=True)
+    
+
+    common_terms = np.intersect1d(query_terms, document_terms)
+    idf_terms = np.array([idf(total_docs, doc_freq, term) for term in common_terms])
+
+    tf_query = query_counts[query_terms.searchsorted(common_terms)]
+    tf_document = document_counts[document_terms.searchsorted(common_terms)]
+
+    numerator = tf_document * (k1 + 1) *tf_query
+    denominator = tf_document + k1 * (1 - b + b * len(document) / len_doc_corpus_mean)
+
+    scores = idf_terms * numerator / denominator
+    return np.sum(scores)
 
 def query_extract(input_text: str, task_name: str = None):
     """
