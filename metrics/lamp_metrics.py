@@ -54,7 +54,7 @@ def text_RMSE(preds:list, labels:list):
     results = mae_metric.compute(predictions=transform_preds, references=transform_labels)
     rmse_res = math.sqrt(results['mse'])
 
-    return {'rmse', rmse_res}
+    return {'rmse': rmse_res}
 
 def text_rouge(preds:list, labels:list):
     assert (len(preds) == len(labels))
