@@ -5,6 +5,7 @@ This file is constructed to test the existing pre-trained model
 # the public libs
 import os
 import json
+import numpy as np
 
 # the self-defined libs
 from data_process import(
@@ -43,6 +44,7 @@ def main():
 
     # load the model and the metrics
     checkpoint_name = os.path.join(output_dir, training_args.model_checkpoint) if training_args.model_checkpoint is not None else checkpoint_file_generation(output_dir)
+    print('The model is {}'.format(checkpoint_name))
     model = AutoModelForSeq2SeqLM.from_pretrained(checkpoint_name)
     metrics_fn = build_compute_metrics_fn(data_args.task_name)
     label_pad_toke_id = -100
@@ -62,6 +64,7 @@ def main():
         output_dir=eval_out_dir,
         per_device_eval_batch_size=6,
         predict_with_generate=True,
+        generation_max_length=512,
         generation_num_beams=4,
         fp16=False,
         # optimization details
@@ -100,10 +103,13 @@ def main():
     model_outputs = predictions.predictions
     label_ids = predictions.label_ids
 
-
+    model_outputs = np.where(model_outputs != -100, model_outputs, tokenizer.pad_token_id)
+    decoded_preds = tokenizer.batch_decode(model_outputs, skip_special_tokens=True)
+    label_ids = np.where(label_ids != -100, label_ids, tokenizer.pad_token_id)
+    decoded_labels = tokenizer.batch_decode(label_ids, skip_special_tokens=True)
     output_data = []
 
-    for output, label_id in zip(model_outputs, label_ids):       
+    for output, label_id in zip(decoded_preds, decoded_labels):       
 
         # Save relevant information to a dictionary
         prediction_info = {

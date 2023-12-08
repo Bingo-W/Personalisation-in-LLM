@@ -66,6 +66,7 @@ def main():
         per_device_train_batch_size=6,
         per_device_eval_batch_size=6,
         predict_with_generate=True,
+        generation_max_length=512,
         generation_num_beams=4,
         fp16=False,
         # optimization details
