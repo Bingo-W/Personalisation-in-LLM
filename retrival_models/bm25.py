@@ -19,7 +19,15 @@ def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1):
     user_profile_corpus = [item['abstract'].split()+item['title'].split() for item in profile]
     
     # compute the scores
-    scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
+    doc_freq = Counter()
+    for doc in user_profile_corpus:
+        doc_set = set(doc)
+        doc_freq.update(doc_set)
+
+    total_docs = len(user_profile_corpus)
+    len_doc_corpus_mean = np.mean(np.array([len(doc) for doc in user_profile_corpus]))
+    scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
+
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
     
@@ -45,7 +53,15 @@ def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1):
     # extract the user profile
     user_profile_corpus = [item['text'].split()+item['title'].split()+item['category'].split() for item in profile]
     # compute the scores
-    scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
+    doc_freq = Counter()
+    for doc in user_profile_corpus:
+        doc_set = set(doc)
+        doc_freq.update(doc_set)
+
+    total_docs = len(user_profile_corpus)
+    len_doc_corpus_mean = np.mean(np.array([len(doc) for doc in user_profile_corpus]))
+    scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
+
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
     
@@ -108,7 +124,15 @@ def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1):
     user_profile_corpus = [item['text'].split()+item['title'].split() for item in profile]
 
     # compute the scores
-    scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
+    doc_freq = Counter()
+    for doc in user_profile_corpus:
+        doc_set = set(doc)
+        doc_freq.update(doc_set)
+
+    total_docs = len(user_profile_corpus)
+    len_doc_corpus_mean = np.mean(np.array([len(doc) for doc in user_profile_corpus]))
+    scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
+
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
     
@@ -134,7 +158,15 @@ def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1):
     user_profile_corpus = [item['abstract'].split()+item['title'].split() for item in profile]
 
     # compute the scores
-    scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
+    doc_freq = Counter()
+    for doc in user_profile_corpus:
+        doc_set = set(doc)
+        doc_freq.update(doc_set)
+
+    total_docs = len(user_profile_corpus)
+    len_doc_corpus_mean = np.mean(np.array([len(doc) for doc in user_profile_corpus]))
+    scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
+
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
     
@@ -162,7 +194,15 @@ def bm25_for_LaMP_7(task_input, profile, retrieve_num = 1):
     user_profile_corpus = [item['text'].split() for item in profile]
 
     # compute the scores
-    scores = [bm25_score(query, item, user_profile_corpus) for item in user_profile_corpus]
+    doc_freq = Counter()
+    for doc in user_profile_corpus:
+        doc_set = set(doc)
+        doc_freq.update(doc_set)
+
+    total_docs = len(user_profile_corpus)
+    len_doc_corpus_mean = np.mean(np.array([len(doc) for doc in user_profile_corpus]))
+    scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
+
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
     
