@@ -3,7 +3,10 @@ from collections import OrderedDict
 
 def random_in_user(task_input, profile, retrieve_num=1):
 
-    retrieved_profile = random.sample(profile, retrieve_num)
+    if len(profile) < retrieve_num:
+        retrieved_profile = profile
+    else:
+         retrieved_profile = random.sample(profile, retrieve_num)
 
     return retrieved_profile
 
