@@ -117,7 +117,11 @@ class LaMP3Prompt():
         """
         To merge the task input and the user profile into the modified input
         """
-        max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
+        input_length = len(tokenizer(input)['input_ids'])
+        if input_length < 256:
+            max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
+        else:
+            max_profile_length = 0 if input_length>max_input_len else (max_input_len-input_length)/len(retrieved_profile)
         profile_prompt = contact(
             self.__per_profile_entity_prompt(
                 retrieved_profile, 

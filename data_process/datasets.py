@@ -138,6 +138,7 @@ class MyDatasets():
                         
                     sample['retrieved_profile'] = random_user_profles
                 else:
+                    # sample the user profile for the personalised user profile
                     sample['retrieved_profile'] = [
                         retrieval_fn(task_input, user_profile, self._retrieval_num) \
                         for task_input, user_profile in zip(sample['input'], sample['profile'])
