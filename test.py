@@ -107,14 +107,16 @@ def main():
     decoded_preds = tokenizer.batch_decode(model_outputs, skip_special_tokens=True)
     label_ids = np.where(label_ids != -100, label_ids, tokenizer.pad_token_id)
     decoded_labels = tokenizer.batch_decode(label_ids, skip_special_tokens=True)
+    input_data = [item['modified_input'] for item in tokenized_dataset['test']]
     output_data = []
 
-    for output, label_id in zip(decoded_preds, decoded_labels):       
+    for output, label_id, input_ in zip(decoded_preds, decoded_labels, input_data):       
 
         # Save relevant information to a dictionary
         prediction_info = {
             "true_label": label_id,
             "predicted": output,
+            "input": input_,
         }
 
         output_data.append(prediction_info)

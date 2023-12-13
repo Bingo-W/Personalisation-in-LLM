@@ -152,6 +152,7 @@ class MyDatasets():
                 modified_input = [
                     item for item in sample['input']
                 ]
+            
             model_inputs = tokenizer(modified_input, max_length=input_max_length, padding=padding, truncation=True)
 
             gold_labels = [item['output'] for item in sample['golds']]
@@ -161,6 +162,7 @@ class MyDatasets():
                 [(l if l != tokenizer.pad_token_id else -100) for l in label] for label in labels["input_ids"]
             ]
             model_inputs["labels"] = labels["input_ids"]
+            model_inputs['modified_input'] = modified_input
 
             return model_inputs
         
