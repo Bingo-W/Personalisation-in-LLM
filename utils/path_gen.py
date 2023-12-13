@@ -9,6 +9,8 @@ def output_dir_generation(data_args, training_args):
 
     # add the retrieval name
     output_dir = os.path.join(output_dir, data_args.retrieval_id)
+    if data_args.retrieval_id =='Mixed':
+        output_dir = os.path.join(output_dir, data_args.input_retrieval_id+'_'+data_args.output_retrieval_id)
     
     # add the task name
     output_dir = os.path.join(output_dir, data_args.task_pattern, data_args.task_name)
@@ -18,7 +20,9 @@ def output_dir_generation(data_args, training_args):
 
     if data_args.retrieval_id == 'Random' or data_args.retrieval_id == 'Full_Random':
         output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
-
+    elif data_args.retrieval_id =='Mixed':
+        if data_args.input_retrieval_id in ['Random', 'Full_Random'] or data_args.output_retrieval_id in ['Random', 'Full_Random']:
+            output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
     return output_dir
 
 

@@ -56,6 +56,30 @@ class DataArguments:
         default='BM25',
         metadata={
             'help': 'the retrieval method for user profiles',
+            'choices': ('BM25', 'Random', 'Full_Random', 'Mixed')
+        }
+    )
+
+    input_retrieval_id : str = field(
+        default='Random',
+        metadata={
+            'help': 'the retrieval method for the input part of user profiles',
+            'choices': ('BM25', 'Random', 'Full_Random', 'Mixed')
+        }
+    )
+
+    input_retrieval_id : str = field(
+        default='Random',
+        metadata={
+            'help': 'the retrieval method for the input part of user profiles',
+            'choices': ('BM25', 'Random', 'Full_Random')
+        }
+    )
+
+    output_retrieval_id : str = field(
+        default='Random',
+        metadata={
+            'help': 'the retrieval method for the output part of user profiles',
             'choices': ('BM25', 'Random', 'Full_Random')
         }
     )

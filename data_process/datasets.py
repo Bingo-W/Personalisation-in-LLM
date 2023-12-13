@@ -3,7 +3,7 @@ from datasets import load_dataset, concatenate_datasets
 from retrival_models import AutoRetrieval
 import random
 
-from .utils import list_merge
+from .utils import list_merge, merge_user_profile
 
 class MyDatasets():
 
@@ -11,6 +11,8 @@ class MyDatasets():
         self._task_name = data_args.task_name
         self._task_pattern = data_args.task_pattern
         self._retrieval_id = data_args.retrieval_id
+        self._input_retrieval_id = data_args.input_retrieval_id
+        self._output_retrieval_id = data_args.output_retrieval_id
         self._random_seed = data_args.retrieval_random_seed
         self._retrieval_num = data_args.retrieval_num
         self._raw_data_folder_path = data_args.raw_data_folder_path
@@ -37,7 +39,7 @@ class MyDatasets():
         assert(os.path.exists(self._task_path))
         self._datasets = self.__load_dataset()
 
-        if self._retrieval_id == 'Full_Random':
+        if self._retrieval_id == 'Full_Random' or 'Mixed':
             self._user_pro = self.__compute_user_pro()
     
     def __load_dataset(self,):
@@ -81,8 +83,22 @@ class MyDatasets():
         user_pro = [item/total_num for item in user_pro]
 
         return user_pro
-        
     
+    def __sample_among_users(self, num_user, retrieval_fn):
+        random.seed(self._random_seed)
+        random_users = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=num_user)
+        random_user_profles = []
+        for index_ in range(num_user):
+            user_profiles_pool = []
+            begin_index = index_*self._retrieval_num
+            end_index = (index_+1)*self._retrieval_num
+            for random_user in random_users[begin_index: end_index]:
+                user_profiles_pool.extend(random_user['profile'])
+            
+            random_user_profles.append(retrieval_fn(None, user_profiles_pool, self._retrieval_num))
+
+        return random_user_profles
+
     def tokenization(self, tokenizer, training_args):
         """
         Tranform the text dataset into the tokenized dataset
@@ -113,7 +129,9 @@ class MyDatasets():
         output_max_length = training_args.output_max_length
         ir_config = {
             'task_name':self._task_name,
-            'random_seed': self._random_seed
+            'random_seed': self._random_seed,
+            'input_retrieval_id': self._input_retrieval_id,
+            'output_retrieval_id': self._output_retrieval_id,
         }
         retrieval_fn = AutoRetrieval.get(self._retrieval_id, ir_config)
         prompt_constructor = PromptClass()
@@ -123,22 +141,32 @@ class MyDatasets():
             
             if self._retrieval_num != 0:
                 if self._retrieval_id == 'Full_Random':
-                    random.seed(self._random_seed)
-                    random_users = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=len(sample['input'])*self._retrieval_num)
+                    # for random sample
+                    batch_size = len(sample['input'])
+                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, retrieval_fn)
 
-                    random_user_profles = []
-                    for index_ in range(len(sample['input'])):
-                        user_profiles_pool = []
-                        begin_index = index_*self._retrieval_num
-                        end_index = (index_+1)*self._retrieval_num
-                        for random_user in random_users[begin_index: end_index]:
-                            user_profiles_pool.extend(random_user['profile'])
-                        
-                        random_user_profles.append(retrieval_fn(None, user_profiles_pool, self._retrieval_num))
-                        
                     sample['retrieved_profile'] = random_user_profles
+                elif self._retrieval_id == 'Mixed':
+                    
+                    batch_size = len(sample['input'])
+                    if self._input_retrieval_id == 'Full_Random':
+                        profiles_for_input = self.__sample_among_users(batch_size*self._retrieval_num, retrieval_fn['input'])
+                    else:
+                        profiles_for_input = [
+                        retrieval_fn['output'](task_input, user_profile, self._retrieval_num) \
+                        for task_input, user_profile in zip(sample['input'], sample['profile'])
+                    ]
+                    if self._output_retrieval_id == 'Full_Random':
+                        profiles_for_output = self.__sample_among_users(batch_size*self._retrieval_num, retrieval_fn['output'])
+                    else:
+                        profiles_for_output = [
+                        retrieval_fn['output'](task_input, user_profile, self._retrieval_num) \
+                        for task_input, user_profile in zip(sample['input'], sample['profile'])
+                    ]
+                    sample['retrieved_profile'] = merge_user_profile(profiles_for_input, profiles_for_output, self._task_name)    
+                    
                 else:
-                    # sample the user profile for the personalised user profile
+                    # for personalisation or context-aware personalisation
                     sample['retrieved_profile'] = [
                         retrieval_fn(task_input, user_profile, self._retrieval_num) \
                         for task_input, user_profile in zip(sample['input'], sample['profile'])
@@ -149,6 +177,7 @@ class MyDatasets():
                     for task_input, retrieved_profile in zip(sample['input'], sample['retrieved_profile'])
                 ]
             else:
+                # for non-personalisation
                 modified_input = [
                     item for item in sample['input']
                 ]
