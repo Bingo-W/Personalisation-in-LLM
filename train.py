@@ -48,7 +48,7 @@ def main():
         access_token = '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'
         tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token)
         tokenizer.pad_token = '[PAD]'
-        model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token)
+        model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token, torch_dtype = "auto")
     else:
         tokenizer = AutoTokenizer.from_pretrained(training_args.model_id)
         model = AutoModelForSeq2SeqLM.from_pretrained(training_args.model_id)
