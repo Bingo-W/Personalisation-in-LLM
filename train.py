@@ -11,7 +11,8 @@ from transformers import(
     AutoModelForSeq2SeqLM,
     DataCollatorForSeq2Seq,
     Seq2SeqTrainingArguments,
-    Seq2SeqTrainer
+    Seq2SeqTrainer,
+    AutoModelForCausalLM
 )
 
 from utils import (
@@ -43,12 +44,17 @@ def main():
     my_datasets = MyDatasets(data_args)
     
     # tokenize the dataset
-    tokenizer = AutoTokenizer.from_pretrained(training_args.model_id)
-    tokenized_dataset = my_datasets.tokenization(tokenizer, training_args)
-
+    if training_args.model_id == 'meta-llama/Llama-2-7b-hf':
+        access_token = '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'
+        tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token)
+        tokenizer.pad_token = '[PAD]'
+        model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token)
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(training_args.model_id)
+        model = AutoModelForSeq2SeqLM.from_pretrained(training_args.model_id)
     # load the model, dataloader and metrics
     metrics_fn = build_compute_metrics_fn(data_args.task_name)
-    model = AutoModelForSeq2SeqLM.from_pretrained(training_args.model_id)
+    tokenized_dataset = my_datasets.tokenization(tokenizer, training_args)
     label_pad_toke_id = -100
     data_collator = DataCollatorForSeq2Seq(
         tokenizer=tokenizer,
@@ -63,12 +69,12 @@ def main():
     # define the training hyper-parameters
     running_args = Seq2SeqTrainingArguments(
         output_dir=output_dir,
-        per_device_train_batch_size=6,
-        per_device_eval_batch_size=6,
+        per_device_train_batch_size=training_args.batch_size,
+        per_device_eval_batch_size=training_args.batch_size,
         predict_with_generate=True,
         generation_max_length=512,
         generation_num_beams=4,
-        fp16=False,
+        fp16=training_args.fp16,
         # optimization details
         learning_rate=5e-5,
         weight_decay=10e-4,

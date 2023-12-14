@@ -62,11 +62,11 @@ def main():
     eval_out_dir = os.path.join(output_dir, 'eval')
     running_args = Seq2SeqTrainingArguments(
         output_dir=eval_out_dir,
-        per_device_eval_batch_size=6,
+        per_device_eval_batch_size=training_args.batch_size,
         predict_with_generate=True,
         generation_max_length=512,
         generation_num_beams=4,
-        fp16=False,
+        fp16=training_args.fp16,
         # optimization details
         # learning_rate=5e-5,
         # weight_decay=10e-4,

@@ -7,9 +7,11 @@ def create_own_argument():
     data_args, training_args = parser.parse_args_into_dataclasses()
     
     # check the hyperparameter
-    if training_args.model_id == 'google/flan-t5-xxl':
+    if training_args.model_id in ['google/flan-t5-xxl', 'google/flan-t5-xl', 'meta-llama/Llama-2-7b-hf']:
         training_args.do_train = False
         training_args.do_eval = True
+    if training_args.model_id == 'meta-llama/Llama-2-7b-hf':
+        training_args.fp16=True
 
     return data_args, training_args
 
@@ -124,7 +126,8 @@ class TrainingArguments:
     model_id : str = field(
         default = 'google/flan-t5-base',
         metadata = {
-            'help': 'the Huggingface ID of the pre-trained model'
+            'help': 'the Huggingface ID of the pre-trained model',
+            'choices': ('meta-llama/Llama-2-7b-hf', 'google/flan-t5-base', 'google/flan-t5-xl', 'google/flan-t5-xxl')
         }
     )
 
@@ -161,6 +164,14 @@ class TrainingArguments:
 
     training_epoch: int = field(
         default=10,
+    )
+
+    batch_size: int = field(
+        default=6,
+    )
+
+    fp16: bool = field(
+        default=False,
     )
 
     do_train: bool = field(
