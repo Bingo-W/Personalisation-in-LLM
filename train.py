@@ -46,7 +46,7 @@ def main():
     # tokenize the dataset
     if training_args.model_id == 'meta-llama/Llama-2-7b-hf':
         access_token = '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'
-        tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token)
+        tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token, padding_side = "left")
         tokenizer.pad_token = '[PAD]'
         model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf", token=access_token, torch_dtype = "auto")
     else:
@@ -72,9 +72,10 @@ def main():
         per_device_train_batch_size=training_args.batch_size,
         per_device_eval_batch_size=training_args.batch_size,
         predict_with_generate=True,
-        generation_max_length=512,
+        generation_max_length=1024,
         generation_num_beams=4,
-        fp16=training_args.fp16,
+        #bf16=True,
+        #fp16=training_args.fp16,
         # optimization details
         learning_rate=5e-5,
         weight_decay=10e-4,
