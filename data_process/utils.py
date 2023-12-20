@@ -33,3 +33,24 @@ def merge_user_profile(profile_list_a, profile_list_b, task_name):
 
     
     return res_profile
+
+def construct_for_llama2(original_input, task_name):
+    MODIFIED_ANCHOR = OrderedDict(
+        [
+            ('LaMP_1', None),
+            ('LaMP_2', 'article: '),
+            ('LaMP_3', 'review: '),
+            ('LaMP_4', 'article: '),
+            ('LaMP_5', 'paper: '),
+            ('LaMP_6', None),
+            ('LaMP_7', 'before or after it: '),
+        ]
+    )
+    if MODIFIED_ANCHOR[task_name] is not None:
+        split_anchor = MODIFIED_ANCHOR[task_name]
+        split_input = original_input.split(split_anchor)
+        modified_input = split_input[0] + split_anchor + '"' + split_input[1] + '"'
+    else:
+        modified_input = original_input
+        
+    return modified_input + '\nAnswer:'

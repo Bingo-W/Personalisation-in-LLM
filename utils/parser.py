@@ -127,7 +127,7 @@ class TrainingArguments:
         default = 'google/flan-t5-base',
         metadata = {
             'help': 'the Huggingface ID of the pre-trained model',
-            'choices': ('meta-llama/Llama-2-7b-hf', 'google/flan-t5-base', 'google/flan-t5-xl', 'google/flan-t5-xxl')
+            'choices': ('meta-llama/Llama-2-7b-chat-hf', 'google/flan-t5-base', 'google/flan-t5-xl', 'google/flan-t5-xxl')
         }
     )
 
