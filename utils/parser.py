@@ -93,7 +93,7 @@ class DataArguments:
         }
     )
 
-    retrieval_num: int = field(
+    retrieval_num: float = field(
         default=1,
         metadata={
             'help': 'the number of the retrieved user profiles'

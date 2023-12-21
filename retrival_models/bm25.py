@@ -29,7 +29,9 @@ def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1):
     scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
-    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+
+    retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
+    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -63,7 +65,8 @@ def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1):
     scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
-    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
+    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -100,7 +103,8 @@ def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1):
     scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
     
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
-    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
+    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -134,7 +138,8 @@ def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1):
     scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
-    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
+    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -168,7 +173,8 @@ def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1):
     scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
-    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
+    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -204,7 +210,8 @@ def bm25_for_LaMP_7(task_input, profile, retrieve_num = 1):
     scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
-    retrieved_index = [index for index, _ in sorted_score[:retrieve_num]]
+    retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
+    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
