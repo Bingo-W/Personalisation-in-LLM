@@ -16,7 +16,10 @@ def output_dir_generation(data_args, training_args):
     output_dir = os.path.join(output_dir, data_args.task_pattern, data_args.task_name)
 
     # add the retrieval number
-    output_dir = os.path.join(output_dir, str(data_args.retrieval_num))
+    if data_args.retrieval_num < 1 and data_args.retrieval_num>0:
+        output_dir = os.path.join(output_dir, str(data_args.retrieval_num))
+    else:
+        output_dir = os.path.join(output_dir, str(int(data_args.retrieval_num)))
 
     if data_args.retrieval_id == 'Random' or data_args.retrieval_id == 'Full_Random':
         output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
