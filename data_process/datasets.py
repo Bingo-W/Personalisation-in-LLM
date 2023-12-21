@@ -84,12 +84,12 @@ class MyDatasets():
 
         return user_pro
     
-    def __sample_among_users(self, num_user, retrieval_fn):
+    def __sample_among_users(self, num_user, batch_size, retrieval_fn):
         random.seed(self._random_seed)
         num_user = int(num_user)
         random_users = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=num_user)
         random_user_profles = []
-        for index_ in range(num_user):
+        for index_ in range(batch_size):
             user_profiles_pool = []
             begin_index = int(index_*self._retrieval_num)
             end_index = int((index_+1)*self._retrieval_num)
@@ -144,7 +144,7 @@ class MyDatasets():
                 if self._retrieval_id == 'Full_Random':
                     # for random sample
                     batch_size = len(sample['input'])
-                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, retrieval_fn)
+                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn)
 
                     sample['retrieved_profile'] = random_user_profles
                 elif self._retrieval_id == 'Mixed':
@@ -287,11 +287,11 @@ class LlamaDatasets():
 
         return user_pro
     
-    def __sample_among_users(self, num_user, retrieval_fn):
+    def __sample_among_users(self, num_user, batch_size, retrieval_fn):
         random.seed(self._random_seed)
         random_users = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=num_user)
         random_user_profles = []
-        for index_ in range(num_user):
+        for index_ in range(batch_size):
             user_profiles_pool = []
             begin_index = index_*self._retrieval_num
             end_index = (index_+1)*self._retrieval_num
@@ -346,7 +346,7 @@ class LlamaDatasets():
                 if self._retrieval_id == 'Full_Random':
                     # for random sample
                     batch_size = len(sample['input'])
-                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, retrieval_fn)
+                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn)
 
                     sample['retrieved_profile'] = random_user_profles
                 elif self._retrieval_id == 'Mixed':
