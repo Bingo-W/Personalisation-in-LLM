@@ -151,14 +151,14 @@ class MyDatasets():
                     
                     batch_size = len(sample['input'])
                     if self._input_retrieval_id == 'Full_Random':
-                        profiles_for_input = self.__sample_among_users(batch_size*self._retrieval_num, retrieval_fn['input'])
+                        profiles_for_input = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn['input'])
                     else:
                         profiles_for_input = [
                         retrieval_fn['input'](task_input, user_profile, self._retrieval_num) \
                         for task_input, user_profile in zip(sample['input'], sample['profile'])
                     ]
                     if self._output_retrieval_id == 'Full_Random':
-                        profiles_for_output = self.__sample_among_users(batch_size*self._retrieval_num, retrieval_fn['output'])
+                        profiles_for_output = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn['output'])
                     else:
                         profiles_for_output = [
                         retrieval_fn['output'](task_input, user_profile, self._retrieval_num) \
