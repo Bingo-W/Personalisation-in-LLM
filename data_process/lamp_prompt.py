@@ -74,6 +74,8 @@ class LaMP2Prompt():
 
     def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
         
+        if len(retrieved_profile) == 0:
+            return input
         max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
         profile_prompt = contact(
             self.__per_profile_entity_prompt(
