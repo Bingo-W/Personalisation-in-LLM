@@ -1,0 +1,5 @@
+pytorch
+transformers
+evaluate
+accelerate
+tensorboardX
