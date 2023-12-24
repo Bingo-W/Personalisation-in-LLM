@@ -13,6 +13,9 @@ def create_own_argument():
     if training_args.model_id == 'meta-llama/Llama-2-7b-hf':
         training_args.fp16=True
 
+    if data_args.retrieval_id == 'Mixed':
+        assert data_args.retrieval_ablation == 'both'
+
     return data_args, training_args
 
 @dataclass
@@ -59,6 +62,14 @@ class DataArguments:
         metadata={
             'help': 'the retrieval method for user profiles',
             'choices': ('BM25', 'Random', 'Full_Random', 'Mixed')
+        }
+    )
+
+    retrieval_ablation: str = field(
+        default='both',
+        metadata={
+            'help': 'the removal of the input or output',
+            'choices': ('only_input', 'only_output')
         }
     )
 

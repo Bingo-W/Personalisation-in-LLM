@@ -11,6 +11,7 @@ class MyDatasets():
         self._task_name = data_args.task_name
         self._task_pattern = data_args.task_pattern
         self._retrieval_id = data_args.retrieval_id
+        self._retrieval_ablation = data_args.retrieval_ablation
         self._input_retrieval_id = data_args.input_retrieval_id
         self._output_retrieval_id = data_args.output_retrieval_id
         self._random_seed = data_args.retrieval_random_seed
@@ -107,10 +108,16 @@ class MyDatasets():
         :param tokenizer: the tokenizer of the pre-training model from transformers library
         """
         
+        
         if self._task_name == 'LaMP_1':
             from .lamp_prompt import LaMP1Prompt as PromptClass
         elif self._task_name == 'LaMP_2':
-            from .lamp_prompt import LaMP2Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP2Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output':
+                from.lamp_prompt_ablation import LaMP2PromptAblation as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_3':
             from .lamp_prompt import LaMP3Prompt as PromptClass
         elif self._task_name == 'LaMP_4':
@@ -124,6 +131,7 @@ class MyDatasets():
             from .lamp_prompt import LaMP7Prompt as PromptClass
         else:
             raise Exception(f"These is no available preprocess function for the task.")
+
 
         task_max_length = training_args.task_max_length
         input_max_length = training_args.input_max_length

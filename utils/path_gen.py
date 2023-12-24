@@ -8,7 +8,12 @@ def output_dir_generation(data_args, training_args):
     output_dir = os.path.join(training_args.result_dir, model_name)
 
     # add the retrieval name
-    output_dir = os.path.join(output_dir, data_args.retrieval_id)
+    if data_args.retrieval_ablation == 'both':
+        output_dir = os.path.join(output_dir, data_args.retrieval_id)
+    else:
+        output_dir = os.path.join(output_dir, data_args.retrieval_id+'_input') if data_args.retrieval_ablation == 'only_input'\
+                                    else os.path.join(output_dir, data_args.retrieval_id+'_output')
+        
     if data_args.retrieval_id =='Mixed':
         output_dir = os.path.join(output_dir, data_args.input_retrieval_id+'_'+data_args.output_retrieval_id)
     
