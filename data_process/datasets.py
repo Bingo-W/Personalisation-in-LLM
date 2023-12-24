@@ -119,7 +119,12 @@ class MyDatasets():
             else:
                 raise ValueError('No Implements')
         elif self._task_name == 'LaMP_3':
-            from .lamp_prompt import LaMP3Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP3Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output':
+                from.lamp_prompt_ablation import LaMP3PromptAblation as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_4':
             from .lamp_prompt import LaMP4Prompt as PromptClass
         elif self._task_name == 'LaMP_5':
