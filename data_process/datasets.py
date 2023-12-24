@@ -126,9 +126,19 @@ class MyDatasets():
             else:
                 raise ValueError('No Implements')
         elif self._task_name == 'LaMP_4':
-            from .lamp_prompt import LaMP4Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP4Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output':
+                from.lamp_prompt_ablation import LaMP4PromptAblation as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_5':
-            from .lamp_prompt import LaMP5Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP5Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output':
+                from.lamp_prompt_ablation import LaMP5PromptAblation as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_6':
             #from .lamp_prompt import LaMP6Prompt as PromptClass
             raise ValueError('We cannot obtain the access to the dataset')
