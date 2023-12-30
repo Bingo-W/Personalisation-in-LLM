@@ -115,7 +115,9 @@ class MyDatasets():
             if self._retrieval_ablation == 'both':
                 from .lamp_prompt import LaMP2Prompt as PromptClass
             elif self._retrieval_ablation == 'only_output':
-                from.lamp_prompt_ablation import LaMP2PromptAblation as PromptClass
+                from .lamp_prompt_ablation import LaMP2PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP2PromptInput as PromptClass
             else:
                 raise ValueError('No Implements')
         elif self._task_name == 'LaMP_3':
@@ -123,6 +125,8 @@ class MyDatasets():
                 from .lamp_prompt import LaMP3Prompt as PromptClass
             elif self._retrieval_ablation == 'only_output':
                 from.lamp_prompt_ablation import LaMP3PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP3PromptInput as PromptClass
             else:
                 raise ValueError('No Implements')
         elif self._task_name == 'LaMP_4':
@@ -130,6 +134,8 @@ class MyDatasets():
                 from .lamp_prompt import LaMP4Prompt as PromptClass
             elif self._retrieval_ablation == 'only_output':
                 from.lamp_prompt_ablation import LaMP4PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP4PromptInput as PromptClass
             else:
                 raise ValueError('No Implements')
         elif self._task_name == 'LaMP_5':
@@ -137,6 +143,8 @@ class MyDatasets():
                 from .lamp_prompt import LaMP5Prompt as PromptClass
             elif self._retrieval_ablation == 'only_output':
                 from.lamp_prompt_ablation import LaMP5PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP5PromptInput as PromptClass
             else:
                 raise ValueError('No Implements')
         elif self._task_name == 'LaMP_6':
