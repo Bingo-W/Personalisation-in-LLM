@@ -69,7 +69,7 @@ class DataArguments:
         default='both',
         metadata={
             'help': 'the removal of the input or output',
-            'choices': ('only_input', 'only_output')
+            'choices': ('only_input', 'only_output', 'both', 'decouple')
         }
     )
 

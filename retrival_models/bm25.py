@@ -40,7 +40,7 @@ def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1):
 
     return retrieved_profile
 
-def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1):
+def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
 
     # extract the words from the non-template part of the sentence
     text = task_input.split('article:')[-1].strip()
@@ -53,7 +53,10 @@ def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1):
             break
     
     # extract the user profile
-    user_profile_corpus = [item['text'].split()+item['title'].split()+item['category'].split() for item in profile]
+    if retrieval_ablation == 'decouple':
+        user_profile_corpus = [item['text'].split()+item['title'].split() for item in profile]
+    else:
+        user_profile_corpus = [item['text'].split()+item['title'].split()+item['category'].split() for item in profile]
     # compute the scores
     doc_freq = Counter()
     for doc in user_profile_corpus:
@@ -77,7 +80,7 @@ def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1):
 
     
 
-def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1):
+def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
     
     # extract the words from the non-template part of the sentence
     text = task_input.split('just answer with 1, 2, 3, 4, or 5 without further explanation. review:')[-1].strip()
@@ -90,7 +93,10 @@ def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1):
             break
     
     # extract the user profile
-    user_profile_corpus = [item['text'].split()+item['score'].split() for item in profile]
+    if retrieval_ablation == 'decouple':
+        user_profile_corpus = [item['text'].split() for item in profile]
+    else:
+        user_profile_corpus = [item['text'].split()+item['score'].split() for item in profile]
 
     # compute the scores
     doc_freq = Counter()
@@ -114,7 +120,7 @@ def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1):
     return retrieved_profile
 
 
-def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1):
+def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
     text = task_input.split('for the following article: ')[-1].strip()
     query = text.split()
 
@@ -125,7 +131,10 @@ def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1):
             break
     
     # extract the user profile
-    user_profile_corpus = [item['text'].split()+item['title'].split() for item in profile]
+    if retrieval_ablation == 'decouple':
+        user_profile_corpus = [item['text'].split() for item in profile]
+    else:
+        user_profile_corpus = [item['text'].split()+item['title'].split() for item in profile]
 
     # compute the scores
     doc_freq = Counter()
@@ -149,7 +158,7 @@ def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1):
     return retrieved_profile
 
 
-def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1):
+def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
     text = task_input.split('the following abstract of a paper: ')[-1].strip()
     query = text.split()
 
@@ -160,7 +169,10 @@ def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1):
             break
     
     # extract the user profile
-    user_profile_corpus = [item['abstract'].split()+item['title'].split() for item in profile]
+    if retrieval_ablation == 'decouple':
+        user_profile_corpus = [item['abstract'].split() for item in profile]
+    else:
+        user_profile_corpus = [item['abstract'].split()+item['title'].split() for item in profile]
 
     # compute the scores
     doc_freq = Counter()

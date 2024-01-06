@@ -114,7 +114,7 @@ class MyDatasets():
         elif self._task_name == 'LaMP_2':
             if self._retrieval_ablation == 'both':
                 from .lamp_prompt import LaMP2Prompt as PromptClass
-            elif self._retrieval_ablation == 'only_output':
+            elif self._retrieval_ablation == 'only_output' or self._retrieval_ablation == 'decouple':
                 from .lamp_prompt_ablation import LaMP2PromptAblation as PromptClass
             elif self._retrieval_ablation == 'only_input':
                 from .lamp_prompt_ablation import LaMP2PromptInput as PromptClass
@@ -123,7 +123,7 @@ class MyDatasets():
         elif self._task_name == 'LaMP_3':
             if self._retrieval_ablation == 'both':
                 from .lamp_prompt import LaMP3Prompt as PromptClass
-            elif self._retrieval_ablation == 'only_output':
+            elif self._retrieval_ablation == 'only_output'or self._retrieval_ablation == 'decouple':
                 from.lamp_prompt_ablation import LaMP3PromptAblation as PromptClass
             elif self._retrieval_ablation == 'only_input':
                 from .lamp_prompt_ablation import LaMP3PromptInput as PromptClass
@@ -132,7 +132,7 @@ class MyDatasets():
         elif self._task_name == 'LaMP_4':
             if self._retrieval_ablation == 'both':
                 from .lamp_prompt import LaMP4Prompt as PromptClass
-            elif self._retrieval_ablation == 'only_output':
+            elif self._retrieval_ablation == 'only_output' or self._retrieval_ablation == 'decouple':
                 from.lamp_prompt_ablation import LaMP4PromptAblation as PromptClass
             elif self._retrieval_ablation == 'only_input':
                 from .lamp_prompt_ablation import LaMP4PromptInput as PromptClass
@@ -141,7 +141,7 @@ class MyDatasets():
         elif self._task_name == 'LaMP_5':
             if self._retrieval_ablation == 'both':
                 from .lamp_prompt import LaMP5Prompt as PromptClass
-            elif self._retrieval_ablation == 'only_output':
+            elif self._retrieval_ablation == 'only_output' or self._retrieval_ablation == 'decouple':
                 from.lamp_prompt_ablation import LaMP5PromptAblation as PromptClass
             elif self._retrieval_ablation == 'only_input':
                 from .lamp_prompt_ablation import LaMP5PromptInput as PromptClass
@@ -200,7 +200,7 @@ class MyDatasets():
                 else:
                     # for personalisation or context-aware personalisation
                     sample['retrieved_profile'] = [
-                        retrieval_fn(task_input, user_profile, self._retrieval_num) \
+                        retrieval_fn(task_input, user_profile, self._retrieval_num, self._retrieval_ablation) \
                         for task_input, user_profile in zip(sample['input'], sample['profile'])
                     ]
 

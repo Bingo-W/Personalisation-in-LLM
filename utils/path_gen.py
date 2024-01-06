@@ -10,6 +10,8 @@ def output_dir_generation(data_args, training_args):
     # add the retrieval name
     if data_args.retrieval_ablation == 'both':
         output_dir = os.path.join(output_dir, data_args.retrieval_id)
+    elif data_args.retrieval_ablation == 'decouple':
+        output_dir = os.path.join(output_dir, data_args.retrieval_id+'_decouple')
     else:
         output_dir = os.path.join(output_dir, data_args.retrieval_id+'_input') if data_args.retrieval_ablation == 'only_input'\
                                     else os.path.join(output_dir, data_args.retrieval_id+'_output')
