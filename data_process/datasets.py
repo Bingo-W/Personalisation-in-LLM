@@ -12,6 +12,7 @@ class MyDatasets():
         self._task_pattern = data_args.task_pattern
         self._retrieval_id = data_args.retrieval_id
         self._retrieval_ablation = data_args.retrieval_ablation
+        self._retrieval_target = data_args.retrieval_target
         self._input_retrieval_id = data_args.input_retrieval_id
         self._output_retrieval_id = data_args.output_retrieval_id
         self._random_seed = data_args.retrieval_random_seed
@@ -200,7 +201,7 @@ class MyDatasets():
                 else:
                     # for personalisation or context-aware personalisation
                     sample['retrieved_profile'] = [
-                        retrieval_fn(task_input, user_profile, self._retrieval_num, self._retrieval_ablation) \
+                        retrieval_fn(task_input, user_profile, self._retrieval_num, self._retrieval_ablation, self._retrieval_target) \
                         for task_input, user_profile in zip(sample['input'], sample['profile'])
                     ]
 

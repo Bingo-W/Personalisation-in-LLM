@@ -73,6 +73,13 @@ class DataArguments:
         }
     )
 
+    retrieval_target: int = field(
+        default='0',
+        metadata={
+            'help': 'the begining of the retrieved results'
+        }
+    )
+
     input_retrieval_id : str = field(
         default='Random',
         metadata={

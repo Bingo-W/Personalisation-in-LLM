@@ -4,7 +4,7 @@ from collections import OrderedDict, Counter
 
 from .utils import extract_quote
 
-def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1):
+def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
     
     # extract the words from the non-template part of the sentence
     query, input_title = query_extract(task_input)
@@ -31,7 +31,12 @@ def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1):
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
 
     retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
-    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    if target_index == 0:
+        retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    else:
+        target_index = target_index if target_index < len(profile) else len(profile)
+        retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
+        retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -40,7 +45,7 @@ def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1):
 
     return retrieved_profile
 
-def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
+def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
 
     # extract the words from the non-template part of the sentence
     text = task_input.split('article:')[-1].strip()
@@ -69,7 +74,12 @@ def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1, retrieval_ablation='b
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
-    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    if target_index == 0:
+        retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    else:
+        target_index = target_index if target_index < len(profile) else len(profile)
+        retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
+        retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -80,7 +90,7 @@ def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1, retrieval_ablation='b
 
     
 
-def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
+def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
     
     # extract the words from the non-template part of the sentence
     text = task_input.split('just answer with 1, 2, 3, 4, or 5 without further explanation. review:')[-1].strip()
@@ -110,7 +120,12 @@ def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
-    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    if target_index == 0:
+        retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    else:
+        target_index = target_index if target_index < len(profile) else len(profile)
+        retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
+        retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -120,7 +135,7 @@ def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     return retrieved_profile
 
 
-def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
+def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
     text = task_input.split('for the following article: ')[-1].strip()
     query = text.split()
 
@@ -148,7 +163,12 @@ def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1, retrieval_ablation='b
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
-    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    if target_index == 0:
+        retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    else:
+        target_index = target_index if target_index < len(profile) else len(profile)
+        retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
+        retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -158,7 +178,7 @@ def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     return retrieved_profile
 
 
-def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1, retrieval_ablation='both'):
+def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
     text = task_input.split('the following abstract of a paper: ')[-1].strip()
     query = text.split()
 
@@ -186,7 +206,12 @@ def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1, retrieval_ablation='b
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
-    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    if target_index == 0:
+        retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    else:
+        target_index = target_index if target_index < len(profile) else len(profile)
+        retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
+        retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
@@ -198,7 +223,7 @@ def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1, retrieval_ablation='b
 def bm25_for_LaMP_6(task_input, profile, retrieve_num = 1):
     pass
 
-def bm25_for_LaMP_7(task_input, profile, retrieve_num = 1):
+def bm25_for_LaMP_7(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
     text = task_input.split('the following tweet without any explanation before or after it: ')[-1].strip()
     query = text.split()
 
@@ -223,7 +248,12 @@ def bm25_for_LaMP_7(task_input, profile, retrieve_num = 1):
 
     sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
     retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
-    retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    if target_index == 0:
+        retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    else:
+        target_index = target_index if target_index < len(profile) else len(profile)
+        retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
+        retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
     
     # construct the list
     retrieved_profile = []
