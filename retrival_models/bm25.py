@@ -34,6 +34,7 @@ def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     if target_index == 0:
         retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     else:
+        target_index = target_index if target_index >= 1 else int(len(profile)*target_index)
         target_index = target_index if target_index < len(profile) else len(profile)
         retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
         retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
@@ -77,6 +78,7 @@ def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     if target_index == 0:
         retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     else:
+        target_index = target_index if target_index >= 1 else int(len(profile)*target_index)
         target_index = target_index if target_index < len(profile) else len(profile)
         retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
         retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
@@ -123,6 +125,7 @@ def bm25_for_LaMP_3(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     if target_index == 0:
         retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     else:
+        target_index = target_index if target_index >= 1 else int(len(profile)*target_index)
         target_index = target_index if target_index < len(profile) else len(profile)
         retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
         retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
@@ -166,6 +169,7 @@ def bm25_for_LaMP_4(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     if target_index == 0:
         retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     else:
+        target_index = target_index if target_index >= 1 else int(len(profile)*target_index)
         target_index = target_index if target_index < len(profile) else len(profile)
         retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
         retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
@@ -209,6 +213,7 @@ def bm25_for_LaMP_5(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     if target_index == 0:
         retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     else:
+        target_index = target_index if target_index >= 1 else int(len(profile)*target_index)
         target_index = target_index if target_index < len(profile) else len(profile)
         retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
         retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
@@ -251,6 +256,7 @@ def bm25_for_LaMP_7(task_input, profile, retrieve_num = 1, retrieval_ablation='b
     if target_index == 0:
         retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
     else:
+        target_index = target_index if target_index >= 1 else int(len(profile)*target_index)
         target_index = target_index if target_index < len(profile) else len(profile)
         retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
         retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]

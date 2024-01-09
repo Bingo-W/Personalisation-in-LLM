@@ -73,7 +73,7 @@ class DataArguments:
         }
     )
 
-    retrieval_target: int = field(
+    retrieval_target: float = field(
         default='0',
         metadata={
             'help': 'the begining of the retrieved results'
