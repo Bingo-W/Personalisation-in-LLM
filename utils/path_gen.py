@@ -29,7 +29,7 @@ def output_dir_generation(data_args, training_args):
         else:
             output_dir = os.path.join(output_dir, str(int(data_args.retrieval_num)))
     else:
-        output_dir = os.path.join(output_dir, str(int(data_args.retrieval_num))+'_'+str(int(data_args.retrieval_target)))
+        output_dir = os.path.join(output_dir, str(int(data_args.retrieval_num))+'_'+str(data_args.retrieval_target))
 
     if data_args.retrieval_id == 'Random' or data_args.retrieval_id == 'Full_Random':
         output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
