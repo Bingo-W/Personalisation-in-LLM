@@ -1,5 +1,6 @@
 import re
 import math
+import random
 
 def contact(profile_entries, join_words = ", and "):
         
@@ -8,12 +9,42 @@ def contact(profile_entries, join_words = ", and "):
 def add_double_quote(text):
     return "\""+text+"\""
 
+def reorder_list_middle(original_list):
+    n = len(original_list)
+    middle = n // 2
+
+    reordered_list = []
+
+    if n % 2 == 1:  
+        for i in range(middle):
+            reordered_list.append(original_list[-2-i*2])
+        for i in range(middle+1):
+            reordered_list.append(original_list[i*2])
+    else:
+        for i in range(middle):
+            reordered_list.append(original_list[-1-i*2])
+        for i in range(middle):
+            reordered_list.append(original_list[i*2])
+
+    return reordered_list
+
 class LaMP1Prompt():
     def __init__(self) -> None:
         pass
 
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            random.seed(random_seed)
+            random.shuffle(retrieved_profile)
+
         max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
         profile_prompt = contact(
             self.__per_profile_entity_prompt(
@@ -28,6 +59,8 @@ class LaMP1Prompt():
 
     def __per_profile_entity_prompt(self, profile, tokenizer, max_profile_length):
         
+        # change the order of the retrieved profiles
+
         profile_entities = []
         for item in profile:
             

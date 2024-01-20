@@ -118,6 +118,13 @@ class DataArguments:
         }
     )
 
+    retrieval_order: str = field(
+        default='start',
+        metadata={
+            'choices':('start', 'end', 'middle', 'random')
+        }
+    )
+
     process_batch_size: int = field(
         default=1000,
         metadata={
