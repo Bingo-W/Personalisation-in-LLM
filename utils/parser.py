@@ -61,7 +61,7 @@ class DataArguments:
         default='BM25',
         metadata={
             'help': 'the retrieval method for user profiles',
-            'choices': ('BM25', 'Random', 'Full_Random', 'Mixed')
+            'choices': ('BM25', 'Random', 'Full_Random', 'Mixed', 'RanBM25')
         }
     )
 

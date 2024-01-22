@@ -2,8 +2,19 @@ import os
 from datasets import load_dataset, concatenate_datasets
 from retrival_models import AutoRetrieval
 import random
+from collections import OrderedDict
 
 from .utils import list_merge, merge_user_profile, construct_for_llama2
+
+AVERAGE_NUM = OrderedDict(
+    [("LaMP_1", 91),
+    ("LaMP_2", 159),
+    ("LaMP_3", 188),
+    ("LaMP_4", 287),
+    ("LaMP_5", 90),
+    ("LaMP_6", 81),
+    ("LaMP_7", 18)]
+)
 
 class MyDatasets():
 
@@ -87,19 +98,19 @@ class MyDatasets():
 
         return user_pro
     
-    def __sample_among_users(self, num_user, batch_size, retrieval_fn):
+    def __sample_among_users(self, num_user, batch_size, retrieval_num, retrieval_fn):
         random.seed(self._random_seed)
         num_user = int(num_user)
         random_users = random.choices(concatenate_datasets([self._datasets['train'], self._datasets['test']]), weights=self._user_pro, k=num_user)
         random_user_profles = []
         for index_ in range(batch_size):
             user_profiles_pool = []
-            begin_index = int(index_*self._retrieval_num)
-            end_index = int((index_+1)*self._retrieval_num)
+            begin_index = int(index_*retrieval_num)
+            end_index = int((index_+1)*retrieval_num)
             for random_user in random_users[begin_index: end_index]:
                 user_profiles_pool.extend(random_user['profile'])
             
-            random_user_profles.append(retrieval_fn(None, user_profiles_pool, self._retrieval_num))
+            random_user_profles.append(retrieval_fn(None, user_profiles_pool, retrieval_num))
 
         return random_user_profles
 
@@ -177,9 +188,18 @@ class MyDatasets():
                 if self._retrieval_id == 'Full_Random':
                     # for random sample
                     batch_size = len(sample['input'])
-                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn)
+                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, self._retrieval_num, retrieval_fn)
 
                     sample['retrieved_profile'] = random_user_profles
+                elif self._retrieval_id == 'RanBM25':
+                    batch_size = len(sample['input'])
+                    sample_retrie_fn = AutoRetrieval.get('Random', ir_config)
+                    random_user_profles = self.__sample_among_users(batch_size*int(AVERAGE_NUM[self._task_name]), batch_size, AVERAGE_NUM[self._task_name], sample_retrie_fn)
+
+                    sample['retrieved_profile'] = [
+                        retrieval_fn(task_input, random_user_profle, self._retrieval_num, self._retrieval_ablation, self._retrieval_target) \
+                        for task_input, random_user_profle in zip(sample['input'], random_user_profles)
+                    ]
                 elif self._retrieval_id == 'Mixed':
                     
                     batch_size = len(sample['input'])

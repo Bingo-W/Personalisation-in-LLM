@@ -31,7 +31,16 @@ def output_dir_generation(data_args, training_args):
     else:
         output_dir = os.path.join(output_dir, str(int(data_args.retrieval_num))+'_'+str(data_args.retrieval_target))
 
-    if data_args.retrieval_id == 'Random' or data_args.retrieval_id == 'Full_Random':
+    # add the retrieval order
+    if data_args.retrieval_order == 'start':
+        pass
+    else:
+        output_dir = os.path.join(output_dir, data_args.retrieval_order)
+    if data_args.retrieval_order == 'start':
+        output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
+
+    # add the random seed
+    if data_args.retrieval_id == 'Random' or data_args.retrieval_id == 'Full_Random' or data_args.retrieval_id == 'RanBM25':
         output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
     elif data_args.retrieval_id =='Mixed':
         if data_args.input_retrieval_id in ['Random', 'Full_Random'] or data_args.output_retrieval_id in ['Random', 'Full_Random']:

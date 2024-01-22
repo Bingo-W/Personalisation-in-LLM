@@ -336,7 +336,7 @@ def query_extract(input_text: str, task_name: str = None):
     """
     param: input_text: the original task input for query extraction
     """
-
+    
     quote_sentences = extract_quote(input_text)
     query = []
 
