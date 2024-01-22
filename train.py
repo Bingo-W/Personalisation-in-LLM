@@ -86,7 +86,7 @@ def main():
         logging_steps=500,
         evaluation_strategy='epoch',
         save_strategy='epoch',
-        save_total_limit=2,
+        save_total_limit=1,
         load_best_model_at_end=True,
         metric_for_best_model=MATRICS_MAPPING[data_args.task_name],
         report_to='tensorboard',
