@@ -207,7 +207,7 @@ class MyDatasets():
                     ]
 
                 modified_input = [
-                    prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length)
+                    prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length, self._retrieval_order, self._random_seed)
                     for task_input, retrieved_profile in zip(sample['input'], sample['retrieved_profile'])
                 ]
             else:
@@ -320,7 +320,7 @@ class LlamaDatasets(MyDatasets):
                     ]
 
                 modified_input = [
-                    prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length, self._retrieval_order, self._random_seed)
+                    prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length)
                     for task_input, retrieved_profile in zip(sample['input'], sample['retrieved_profile'])
                 ]
             else:

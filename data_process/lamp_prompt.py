@@ -105,10 +105,22 @@ class LaMP2Prompt():
     def __init__(self) -> None:
         pass
 
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            random.seed(random_seed)
+            random.shuffle(retrieved_profile)
+        
         max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
         profile_prompt = contact(
             self.__per_profile_entity_prompt(
@@ -148,12 +160,23 @@ class LaMP3Prompt():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            random.seed(random_seed)
+            random.shuffle(retrieved_profile)
         
         input_length = len(tokenizer(input)['input_ids'])
         if input_length < 256:
@@ -200,12 +223,23 @@ class LaMP4Prompt():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            random.seed(random_seed)
+            random.shuffle(retrieved_profile)
         
         max_profile_length = (max_input_len-max_task_len-5)/len(retrieved_profile)
         profile_prompt = contact(
@@ -246,12 +280,23 @@ class LaMP5Prompt():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            random.seed(random_seed)
+            random.shuffle(retrieved_profile)
         
         max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
         profile_prompt = contact(
@@ -292,7 +337,7 @@ class LaMP6Prompt():
     def __init__(self) -> None:
         pass
 
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
@@ -335,12 +380,23 @@ class LaMP7Prompt():
     def __init__(self) -> None:
         pass
 
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            random.seed(random_seed)
+            random.shuffle(retrieved_profile)
         
         max_profile_length = (max_input_len-max_task_len-10)/len(retrieved_profile)
         profile_prompt = contact(
