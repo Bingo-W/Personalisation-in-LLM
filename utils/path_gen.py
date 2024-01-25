@@ -36,7 +36,8 @@ def output_dir_generation(data_args, training_args):
         pass
     else:
         output_dir = os.path.join(output_dir, data_args.retrieval_order)
-    if data_args.retrieval_order == 'start':
+
+    if data_args.retrieval_order == 'random':
         output_dir = os.path.join(output_dir, str(data_args.retrieval_random_seed))
 
     # add the random seed
