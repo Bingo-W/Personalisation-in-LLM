@@ -137,6 +137,61 @@ class LaMP2Prompt():
         profile_entities = []
         for item in profile:
             
+            final_profile = 'the tag for the movie:' + add_double_quote(item['description']) + ' is ' + add_double_quote(item['tag'])
+            original_profile_tokens = tokenizer.encode(final_profile)
+            if len(original_profile_tokens) > max_profile_length:
+                trim_length = math.ceil(len(original_profile_tokens)-max_profile_length)
+                trim_text_tokens = tokenizer.encode(item['description'])[:-trim_length]
+                trim_profile = tokenizer.decode(trim_text_tokens[:-1])
+            else:
+                trim_profile = item['description']
+            
+            trim_final_profile = 'the tag for the movie:' + add_double_quote(trim_profile) + ' is ' + add_double_quote(item['tag'])
+            #trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
+            profile_entities.append(trim_final_profile)
+        
+        return profile_entities
+
+    def __merge_profile_and_input(self, original_string, additional_string):
+
+        return additional_string + '. ' + original_string
+    
+class LaMP2Prompt_old():
+    def __init__(self) -> None:
+        pass
+
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
+        
+        if len(retrieved_profile) == 0:
+            return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            random.seed(random_seed)
+            random.shuffle(retrieved_profile)
+        
+        max_profile_length = (max_input_len-max_task_len)/len(retrieved_profile)
+        profile_prompt = contact(
+            self.__per_profile_entity_prompt(
+                retrieved_profile, 
+                tokenizer, 
+                max_profile_length)
+        )
+
+        final_input_text = self.__merge_profile_and_input(input, profile_prompt)
+        return final_input_text
+
+    def __per_profile_entity_prompt(self, profile, tokenizer, max_profile_length):
+        
+        profile_entities = []
+        for item in profile:
+            
             final_profile = 'the category for the article:' + add_double_quote(item['text']) + ' is ' + add_double_quote(item['category'])
             original_profile_tokens = tokenizer.encode(final_profile)
             if len(original_profile_tokens) > max_profile_length:

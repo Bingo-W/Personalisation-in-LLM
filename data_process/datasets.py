@@ -79,8 +79,12 @@ class MyDatasets():
         output_dataset = load_dataset("json", data_files=output_datafile)
 
         # merge the input and output tegother
-        input_dataset['train'] = input_dataset['train'].add_column('golds', output_dataset['train'][0]['golds'])
-        input_dataset['test'] = input_dataset['test'].add_column('golds', output_dataset['test'][0]['golds'])
+        if self._task_name == 'LaMP_2':
+            input_dataset['train'] = input_dataset['train'].add_column('golds', output_dataset['train'])
+            input_dataset['test'] = input_dataset['test'].add_column('golds', output_dataset['test'])
+        else:
+            input_dataset['train'] = input_dataset['train'].add_column('golds', output_dataset['train'][0]['golds'])
+            input_dataset['test'] = input_dataset['test'].add_column('golds', output_dataset['test'][0]['golds'])
 
 
         return input_dataset
@@ -219,6 +223,12 @@ class MyDatasets():
                     ]
                     sample['retrieved_profile'] = merge_user_profile(profiles_for_input, profiles_for_output, self._task_name)    
                     
+                elif self._retrieval_id == 'Random':
+                    # for personalisation or context-aware personalisation
+                    sample['retrieved_profile'] = [
+                        retrieval_fn(task_input, user_profile, self._retrieval_num) \
+                        for task_input, user_profile in zip(sample['input'], sample['profile'])
+                    ]
                 else:
                     # for personalisation or context-aware personalisation
                     sample['retrieved_profile'] = [

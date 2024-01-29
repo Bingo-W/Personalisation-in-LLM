@@ -49,6 +49,51 @@ def bm25_for_LaMP_1(task_input, profile, retrieve_num = 1, retrieval_ablation='b
 def bm25_for_LaMP_2(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
 
     # extract the words from the non-template part of the sentence
+    text = task_input.split('description:')[-1].strip()
+    query = text.split()
+    
+    # exclude the profile related to the input text
+    for i, userprofile in enumerate(profile):
+        if userprofile['description'] == text:
+            profile.pop(i)
+            break
+    
+    # extract the user profile
+    if retrieval_ablation == 'decouple':
+        user_profile_corpus = [item['description'].split() for item in profile]
+    else:
+        user_profile_corpus = [item['description'].split()+item['tag'].split() for item in profile]
+    # compute the scores
+    doc_freq = Counter()
+    for doc in user_profile_corpus:
+        doc_set = set(doc)
+        doc_freq.update(doc_set)
+
+    total_docs = len(user_profile_corpus)
+    len_doc_corpus_mean = np.mean(np.array([len(doc) for doc in user_profile_corpus]))
+    scores = [bm25_score_np(query, doc, total_docs, doc_freq, len_doc_corpus_mean) for doc in user_profile_corpus]
+
+    sorted_score = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)
+    retrieve_num = int(retrieve_num*len(profile)) if retrieve_num < 1 and retrieve_num > 0 else retrieve_num
+    if target_index == 0:
+        retrieved_index = [index for index, _ in sorted_score[:int(retrieve_num)]]
+    else:
+        target_index = target_index if target_index >= 1 else int(len(profile)*target_index)
+        target_index = target_index if target_index < len(profile) else len(profile)
+        retrieve_num = retrieve_num if target_index+retrieve_num < len(profile) else 0
+        retrieved_index = [index for index, _ in sorted_score[int(target_index):int(target_index+retrieve_num)]]
+    
+    # construct the list
+    retrieved_profile = []
+    for index in retrieved_index:
+        retrieved_profile.append(profile[index])
+
+    return retrieved_profile
+
+
+def bm25_for_LaMP_2_old(task_input, profile, retrieve_num = 1, retrieval_ablation='both', target_index=0):
+
+    # extract the words from the non-template part of the sentence
     text = task_input.split('article:')[-1].strip()
     query = text.split()
     

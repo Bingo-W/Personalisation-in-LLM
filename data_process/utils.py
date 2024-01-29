@@ -12,7 +12,7 @@ def merge_user_profile(profile_list_a, profile_list_b, task_name):
     OUTPUT_INDEX = OrderedDict(
         [
             ('LaMP_1', None),
-            ('LaMP_2', 'category'),
+            ('LaMP_2', 'tag'),
             ('LaMP_3', 'score'),
             ('LaMP_4', 'title'),
             ('LaMP_5', 'title'),

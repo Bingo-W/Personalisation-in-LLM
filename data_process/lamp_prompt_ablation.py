@@ -12,7 +12,99 @@ class LaMP2PromptAblation():
     def __init__(self) -> None:
         pass
 
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
+        
+        if len(retrieved_profile) == 0:
+            return input
+        
+        max_profile_length = max_input_len-max_task_len
+        profile_prompt = self.__per_profile_entity_prompt(
+                                    retrieved_profile, 
+                                    tokenizer, 
+                                    max_profile_length)
+    
+
+        final_input_text = self.__merge_profile_and_input(input, profile_prompt)
+        return final_input_text
+
+    def __per_profile_entity_prompt(self, profile, tokenizer, max_profile_length):
+        
+        profile_entities = []
+        
+        final_profile = 'the tag for the previous movies are'
+        for item in profile:
+            final_profile += add_double_quote(item['tag'])
+        
+        
+        original_profile_tokens = tokenizer.encode(final_profile)
+        if len(original_profile_tokens) > max_profile_length:
+            trim_length = math.ceil(len(original_profile_tokens)-max_profile_length)
+            trim_text_tokens = original_profile_tokens[:-trim_length]
+            trim_profile = tokenizer.decode(trim_text_tokens[:-1])
+        else:
+            trim_profile = final_profile
+        
+        trim_final_profile = trim_profile
+        #trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
+        
+        return trim_final_profile
+
+    def __merge_profile_and_input(self, original_string, additional_string):
+
+        return additional_string + '. ' + original_string
+
+class LaMP2PromptInput():
+    def __init__(self) -> None:
+        pass
+
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
+        
+        if len(retrieved_profile) == 0:
+            return input
+        
+        max_profile_length = max_input_len-max_task_len
+        profile_prompt = self.__per_profile_entity_prompt(
+                                    retrieved_profile, 
+                                    tokenizer, 
+                                    max_profile_length)
+    
+
+        final_input_text = self.__merge_profile_and_input(input, profile_prompt)
+        return final_input_text
+
+    def __per_profile_entity_prompt(self, profile, tokenizer, max_profile_length):
+        
+        profile_entities = []
+        
+        final_profile = 'The previous movies are '
+        for item in profile:
+            final_profile += add_double_quote(item['description'])
+        
+        
+        original_profile_tokens = tokenizer.encode(final_profile)
+        if len(original_profile_tokens) > max_profile_length:
+            trim_length = math.ceil(len(original_profile_tokens)-max_profile_length)
+            trim_text_tokens = original_profile_tokens[:-trim_length]
+            trim_profile = tokenizer.decode(trim_text_tokens[:-1])
+            # last_quote_index = trim_profile.rfind('"')
+            # trim_profile = trim_profile[:last_quote_index]
+        else:
+            trim_profile = final_profile
+        
+        trim_final_profile = trim_profile
+        #trim_profile_text = tokenizer.decode(trim_profile_tokens[:-1])
+        
+        return trim_final_profile
+
+    def __merge_profile_and_input(self, original_string, additional_string):
+
+        return additional_string + '. ' + original_string
+    
+class LaMP2PromptAblation_old():
+    def __init__(self) -> None:
+        pass
+
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         
         if len(retrieved_profile) == 0:
             return input
@@ -53,11 +145,11 @@ class LaMP2PromptAblation():
 
         return additional_string + '. ' + original_string
 
-class LaMP2PromptInput():
+class LaMP2PromptInput_old():
     def __init__(self) -> None:
         pass
 
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         
         if len(retrieved_profile) == 0:
             return input
@@ -104,7 +196,7 @@ class LaMP3PromptAblation():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
@@ -155,7 +247,7 @@ class LaMP3PromptInput():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
@@ -206,7 +298,7 @@ class LaMP4PromptAblation():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
@@ -253,7 +345,7 @@ class LaMP4PromptInput():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
@@ -301,7 +393,7 @@ class LaMP5PromptAblation():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
@@ -349,7 +441,7 @@ class LaMP5PromptInput():
     def __init__(self) -> None:
         pass
     
-    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256):
+    def aggregated_prompt(self, input, retrieved_profile, tokenizer, max_input_len=512, max_task_len=256, order='start', random_seed=42):
         """
         To merge the task input and the user profile into the modified input
         """
