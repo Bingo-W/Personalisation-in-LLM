@@ -7,6 +7,7 @@ import numpy as np
 from data_process import(
     LlamaDatasets
 )
+from metrics import metrics_for_llama
 
 import transformers
 import torch
@@ -32,13 +33,13 @@ from metrics import(
 )
 
 MATRICS_MAPPING = {
-    "LaMP_1": 'accuracy',
-    "LaMP_2": 'accuracy',
-    "LaMP_3": 'mae',
-    "LaMP_4": 'rouge1',
-    "LaMP_5": 'rouge1',
-    "LaMP_6": 'rouge1',
-    "LaMP_7": 'rouge1',
+    "LaMP_1": ['accuracy'],
+    "LaMP_2": ['accuracy', 'f1'],
+    "LaMP_3": ['mae', 'rmse'],
+    "LaMP_4": ['rouge1', 'rougeL'],
+    "LaMP_5": ['rouge1', 'rougeL'],
+    "LaMP_6": ['rouge1', 'rougeL'],
+    "LaMP_7": ['rouge1', 'rougeL'],
 }
 
 
@@ -49,7 +50,7 @@ def main():
     output_dir = output_dir_generation(data_args, training_args)
 
     if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
+        os.makedirs(output_dir)
     
     # load the dataset
     my_datasets = LlamaDatasets(data_args)
@@ -68,12 +69,13 @@ def main():
     tokenized_dataset = my_datasets.tokenization(tokenizer, training_args)
 
     results = []
-    labels = tokenized_dataset['labels']
-    for item in tqdm( tokenized_dataset['input'], total=len(tokenized_dataset)):
+    labels = tokenized_dataset['test']['labels']
+    for item in tqdm(tokenized_dataset['test']['input'], total=len(tokenized_dataset)):
         
+        # * the deocde only uses the beam search without any other search, such as topk
         sequences = pipeline(
-            item,
-            top_k=10,
+            item+'\nAnswer:',
+            # top_k=10,
             do_sample=True,
             num_return_sequences=1,
             eos_token_id=tokenizer.eos_token_id,
@@ -83,6 +85,14 @@ def main():
 
         final_res = sequences[0]['generated_text'].split('Answer:')[-1].strip().split('\n')[0].strip().strip('"')
         results.append(final_res)
+
+    # compute the metrics results
+    res = metrics_for_llama(data_args.task_name, results, labels)
+    output_file_path = os.path.join(output_dir, "evaluation.json")
+    with open(output_file_path, "w") as file:
+        json.dump(res, file, indent=2)
+
+    print(f"Predictions saved to {output_file_path}")
 
     output_data = []
     for output, label in zip(results, labels):
@@ -97,8 +107,6 @@ def main():
         json.dump(output_data, file, indent=2)
 
     print(f"Predictions saved to {output_file_path}")
-
-
 
 
 if __name__ == '__main__':

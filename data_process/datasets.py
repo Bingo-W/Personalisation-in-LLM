@@ -205,7 +205,7 @@ class MyDatasets():
                         for task_input, random_user_profle in zip(sample['input'], random_user_profles)
                     ]
                 elif self._retrieval_id == 'Mixed':
-                    
+                    # for the mixed user profile
                     batch_size = len(sample['input'])
                     if self._input_retrieval_id == 'Full_Random':
                         profiles_for_input = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn['input'])
@@ -283,16 +283,45 @@ class LlamaDatasets(MyDatasets):
         :param tokenizer: the tokenizer of the pre-training model from transformers library
         """
         
+        
         if self._task_name == 'LaMP_1':
             from .lamp_prompt import LaMP1Prompt as PromptClass
         elif self._task_name == 'LaMP_2':
-            from .lamp_prompt import LaMP2Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP2Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output' or self._retrieval_ablation == 'decouple':
+                from .lamp_prompt_ablation import LaMP2PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP2PromptInput as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_3':
-            from .lamp_prompt import LaMP3Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP3Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output'or self._retrieval_ablation == 'decouple':
+                from.lamp_prompt_ablation import LaMP3PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP3PromptInput as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_4':
-            from .lamp_prompt import LaMP4Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP4Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output' or self._retrieval_ablation == 'decouple':
+                from.lamp_prompt_ablation import LaMP4PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP4PromptInput as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_5':
-            from .lamp_prompt import LaMP5Prompt as PromptClass
+            if self._retrieval_ablation == 'both':
+                from .lamp_prompt import LaMP5Prompt as PromptClass
+            elif self._retrieval_ablation == 'only_output' or self._retrieval_ablation == 'decouple':
+                from.lamp_prompt_ablation import LaMP5PromptAblation as PromptClass
+            elif self._retrieval_ablation == 'only_input':
+                from .lamp_prompt_ablation import LaMP5PromptInput as PromptClass
+            else:
+                raise ValueError('No Implements')
         elif self._task_name == 'LaMP_6':
             #from .lamp_prompt import LaMP6Prompt as PromptClass
             raise ValueError('We cannot obtain the access to the dataset')
@@ -300,6 +329,7 @@ class LlamaDatasets(MyDatasets):
             from .lamp_prompt import LaMP7Prompt as PromptClass
         else:
             raise Exception(f"These is no available preprocess function for the task.")
+
 
         task_max_length = training_args.task_max_length
         input_max_length = training_args.input_max_length
@@ -320,11 +350,20 @@ class LlamaDatasets(MyDatasets):
                 if self._retrieval_id == 'Full_Random':
                     # for random sample
                     batch_size = len(sample['input'])
-                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn)
+                    random_user_profles = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, self._retrieval_num, retrieval_fn)
 
                     sample['retrieved_profile'] = random_user_profles
+                elif self._retrieval_id == 'RanBM25':
+                    batch_size = len(sample['input'])
+                    sample_retrie_fn = AutoRetrieval.get('Random', ir_config)
+                    random_user_profles = self.__sample_among_users(batch_size*int(AVERAGE_NUM[self._task_name]), batch_size, AVERAGE_NUM[self._task_name], sample_retrie_fn)
+
+                    sample['retrieved_profile'] = [
+                        retrieval_fn(task_input, random_user_profle, self._retrieval_num, self._retrieval_ablation, self._retrieval_target) \
+                        for task_input, random_user_profle in zip(sample['input'], random_user_profles)
+                    ]
                 elif self._retrieval_id == 'Mixed':
-                    
+                    # for the mixed user profile
                     batch_size = len(sample['input'])
                     if self._input_retrieval_id == 'Full_Random':
                         profiles_for_input = self.__sample_among_users(batch_size*self._retrieval_num, batch_size, retrieval_fn['input'])
@@ -342,15 +381,21 @@ class LlamaDatasets(MyDatasets):
                     ]
                     sample['retrieved_profile'] = merge_user_profile(profiles_for_input, profiles_for_output, self._task_name)    
                     
-                else:
+                elif self._retrieval_id == 'Random':
                     # for personalisation or context-aware personalisation
                     sample['retrieved_profile'] = [
                         retrieval_fn(task_input, user_profile, self._retrieval_num) \
                         for task_input, user_profile in zip(sample['input'], sample['profile'])
                     ]
+                else:
+                    # for personalisation or context-aware personalisation
+                    sample['retrieved_profile'] = [
+                        retrieval_fn(task_input, user_profile, self._retrieval_num, self._retrieval_ablation, self._retrieval_target) \
+                        for task_input, user_profile in zip(sample['input'], sample['profile'])
+                    ]
 
                 modified_input = [
-                    prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length)
+                    prompt_constructor.aggregated_prompt(task_input, retrieved_profile, tokenizer, input_max_length, task_max_length, self._retrieval_order, self._random_seed)
                     for task_input, retrieved_profile in zip(sample['input'], sample['retrieved_profile'])
                 ]
             else:
@@ -358,20 +403,15 @@ class LlamaDatasets(MyDatasets):
                 modified_input = [
                     item for item in sample['input']
                 ]
-            
-            modified_input = [construct_for_llama2(item, self._task_name) for item in modified_input]
+
             model_inputs = {}
-            
+            model_inputs["labels"] = [item['output'] for item in sample['golds']]
             model_inputs['input'] = modified_input
-
-            gold_labels = [item['output'] for item in sample['golds']]
-
-            model_inputs["labels"] = gold_labels
 
             return model_inputs
         
 
-        processed_datasets = self._datasets['test'].map(
+        processed_datasets = self._datasets.map(
             preprocess_function,
             batched=True,
             batch_size=self._data_args.process_batch_size,

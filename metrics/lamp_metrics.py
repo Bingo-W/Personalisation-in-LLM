@@ -240,3 +240,12 @@ def LaMP7_metrics(eval_preds, tokenizer):
         results.update(metric(decoded_preds, decoded_labels))
     
     return results
+
+def metrics_for_llama(task_names, preditions, references):
+    metrics = MATRICS_MAPPING[task_names]
+    results = {}
+
+    for metric in metrics:
+        results.update(metric(preditions, references))
+
+    return results
