@@ -26,7 +26,7 @@ from metrics import(
 
 MATRICS_MAPPING = {
     "LaMP_1": 'accuracy',
-    "LaMP_2": 'accuracy',
+    "LaMP_2": 'f1',
     "LaMP_3": 'mae',
     "LaMP_4": 'rouge1',
     "LaMP_5": 'rouge1',
