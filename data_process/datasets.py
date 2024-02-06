@@ -411,7 +411,7 @@ class LlamaDatasets(MyDatasets):
             return model_inputs
         
 
-        processed_datasets = self._datasets.map(
+        processed_datasets = self._datasets['test'].map(
             preprocess_function,
             batched=True,
             batch_size=self._data_args.process_batch_size,

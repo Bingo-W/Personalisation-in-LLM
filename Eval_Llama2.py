@@ -69,8 +69,8 @@ def main():
     tokenized_dataset = my_datasets.tokenization(tokenizer, training_args)
 
     results = []
-    labels = tokenized_dataset['test']['labels']
-    for item in tqdm(tokenized_dataset['test']['input'], total=len(tokenized_dataset)):
+    labels = tokenized_dataset['labels']
+    for item in tqdm(tokenized_dataset['input'], total=len(tokenized_dataset)):
         
         # * the deocde only uses the beam search without any other search, such as topk
         sequences = pipeline(
