@@ -402,7 +402,7 @@ class LlamaDatasets(MyDatasets):
             else:
                 # for non-personalisation
                 modified_input = [
-                    item for item in sample['input']
+                    tokenizer.decode(tokenizer(item, max_length=task_max_length, truncation=True)['input_ids']) for item in sample['input']
                 ]
 
             model_inputs = {}

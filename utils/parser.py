@@ -12,7 +12,7 @@ def create_own_argument():
         training_args.do_eval = True
     if training_args.model_id == 'meta-llama/Llama-2-7b-chat-hf':
         training_args.fp16=True
-        training_args.input_max_length = 3000
+        training_args.input_max_length = 1500
         training_args.output_max_length = 128
 
     if data_args.retrieval_id == 'Mixed':
