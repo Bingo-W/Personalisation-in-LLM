@@ -275,6 +275,7 @@ class LlamaDatasets(MyDatasets):
 
     def __init__(self, data_args):
         super(LlamaDatasets,self).__init__(data_args)
+        self.__sample_among_users = self._MyDatasets__sample_among_users
     
     def tokenization(self, tokenizer, training_args):
         """
