@@ -51,7 +51,12 @@ def main():
 
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+    else:
+        if os.path.isdir(output_dir) and any(os.listdir(output_dir)):
+            print('the experiments has been constructed')
+            return 0
     
+    print(output_dir)
     # load the dataset
     my_datasets = LlamaDatasets(data_args)
 
