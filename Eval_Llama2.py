@@ -75,7 +75,7 @@ def main():
         # * the deocde only uses the beam search without any other search, such as topk
         sequences = pipeline(
             item+'\nAnswer:',
-            # top_k=10,
+            top_k=10,
             do_sample=True,
             num_return_sequences=1,
             eos_token_id=tokenizer.eos_token_id,
