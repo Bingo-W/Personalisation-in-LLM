@@ -405,9 +405,14 @@ class LlamaDatasets(MyDatasets):
 
             model_inputs = {}
             model_inputs["labels"] = [item['output'] for item in sample['golds']]
-            model_inputs['input'] = [
-                    tokenizer.decode(tokenizer(item, max_length=task_max_length, truncation=True)['input_ids']) for item in modified_input
-            ]
+            if self._task_name == 'LaMP_1' or self._task_name == 'LaMP_2' or self._task_name == 'LaMP_3':
+                model_inputs['input'] = [
+                        tokenizer.decode(tokenizer(item, max_length=input_max_length, truncation=True)['input_ids']) for item in modified_input
+                ]
+            else:
+                model_inputs['input'] = [
+                        tokenizer.decode(tokenizer(self.llama_prompt(item), max_length=input_max_length, truncation=True)['input_ids']) for item in modified_input
+                ]
 
             return model_inputs
         
@@ -422,3 +427,20 @@ class LlamaDatasets(MyDatasets):
         )
 
         return processed_datasets   
+    
+    def llama_prompt(self, modified_input):
+
+        # choose the anchor
+        anchor = ""
+        if self._task_name == 'LaMP_4':
+            anchor = 'the following article:'
+        elif self._task_name == 'LaMP_5':
+            anchor = 'the following abstract of a paper:'
+        elif self._task_name == 'LaMP_7':
+            anchor = 'the following tweet without any explanation before or after it:'
+        
+        # precoss the input
+        split_text = modified_input.split(anchor)
+        res = split_text[0] + " " + anchor + " \""+split_text[1]+"\""
+
+        return res
