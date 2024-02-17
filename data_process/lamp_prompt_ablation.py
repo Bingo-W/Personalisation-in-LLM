@@ -8,6 +8,25 @@ def contact(profile_entries, join_words = ", and "):
 def add_double_quote(text):
     return "\""+text+"\""
 
+def reorder_list_middle(original_list):
+    n = len(original_list)
+    middle = n // 2
+
+    reordered_list = []
+
+    if n % 2 == 1:  
+        for i in range(middle):
+            reordered_list.append(original_list[-2-i*2])
+        for i in range(middle+1):
+            reordered_list.append(original_list[i*2])
+    else:
+        for i in range(middle):
+            reordered_list.append(original_list[-1-i*2])
+        for i in range(middle):
+            reordered_list.append(original_list[i*2])
+
+    return reordered_list
+
 class LaMP2PromptAblation():
     def __init__(self) -> None:
         pass
@@ -16,6 +35,16 @@ class LaMP2PromptAblation():
         
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
         
         max_profile_length = max_input_len-max_task_len
         profile_prompt = self.__per_profile_entity_prompt(
@@ -61,6 +90,16 @@ class LaMP2PromptInput():
         
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
         
         max_profile_length = max_input_len-max_task_len
         profile_prompt = self.__per_profile_entity_prompt(
@@ -108,6 +147,16 @@ class LaMP2PromptAblation_old():
         
         if len(retrieved_profile) == 0:
             return input
+
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
         
         max_profile_length = max_input_len-max_task_len
         profile_prompt = self.__per_profile_entity_prompt(
@@ -153,6 +202,16 @@ class LaMP2PromptInput_old():
         
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
         
         max_profile_length = max_input_len-max_task_len
         profile_prompt = self.__per_profile_entity_prompt(
@@ -203,6 +262,16 @@ class LaMP3PromptAblation():
         if len(retrieved_profile) == 0:
             return input
         
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
+
         input_length = len(tokenizer(input)['input_ids'])
         if input_length < 256:
             max_profile_length = max_input_len-max_task_len
@@ -254,6 +323,16 @@ class LaMP3PromptInput():
         if len(retrieved_profile) == 0:
             return input
         
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
+
         input_length = len(tokenizer(input)['input_ids'])
         if input_length < 256:
             max_profile_length = max_input_len-max_task_len
@@ -305,6 +384,16 @@ class LaMP4PromptAblation():
         if len(retrieved_profile) == 0:
             return input
         
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
+
         max_profile_length = (max_input_len-max_task_len-5)
         profile_prompt = self.__per_profile_entity_prompt(
                 retrieved_profile, 
@@ -351,6 +440,16 @@ class LaMP4PromptInput():
         """
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
         
         max_profile_length = (max_input_len-max_task_len-5)
         profile_prompt = self.__per_profile_entity_prompt(
@@ -400,6 +499,16 @@ class LaMP5PromptAblation():
         if len(retrieved_profile) == 0:
             return input
         
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
+        
         max_profile_length = (max_input_len-max_task_len)
         profile_prompt = self.__per_profile_entity_prompt(
                 retrieved_profile, 
@@ -447,6 +556,16 @@ class LaMP5PromptInput():
         """
         if len(retrieved_profile) == 0:
             return input
+        
+        # changing the order of the profiles
+        if order == 'start':
+            pass
+        elif order == 'end':
+            retrieved_profile.reverse()
+        elif order == 'middle':
+            retrieved_profile = reorder_list_middle(retrieved_profile)
+        elif order == 'random':
+            pass
         
         max_profile_length = (max_input_len-max_task_len)
         profile_prompt = self.__per_profile_entity_prompt(
