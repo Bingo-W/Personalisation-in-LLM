@@ -48,7 +48,7 @@ class DataArguments:
     raw_data_folder_path: str = field(
         default='../../data/LaMP',
         metadata={
-            'help': 'the path to the raw data foldeß'
+            'help': 'the path to the raw data folde'
         }
     )
 
