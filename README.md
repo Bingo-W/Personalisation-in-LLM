@@ -62,4 +62,10 @@ If you have any questions regarding the code or the paper, please feel free to r
 
 ## Citation
 ```
+@article{wu2024understanding,
+  title={Understanding the Role of User Profile in the Personalization of Large Language Models},
+  author={Wu, Bin and Shi, Zhengyan and Rahmani, Hossein A and Ramineni, Varsha and Yilmaz, Emine},
+  journal={arXiv preprint arXiv:2406.17803},
+  year={2024}
+}
 ```
