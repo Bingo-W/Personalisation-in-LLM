@@ -1,9 +1,9 @@
 # Understanding the Role of User Profile in the Personalization of Large Language Models
-This repository provides the code for our paper titled **[Understanding the Role of User Profile in the Personalization of Large Language Models]()**, making the integration of our code contributions into other projects more accessible.
+This repository provides the code for our paper titled **[Understanding the Role of User Profile in the Personalization of Large Language Models](https://arxiv.org/pdf/2406.17803)**, making the integration of our code contributions into other projects more accessible.
 
 <div align="center">
 
-  [![arxiv-link](https://img.shields.io/badge/Paper-PDF-red?style=flat&logo=arXiv&logoColor=red)]()
+  [![arxiv-link](https://img.shields.io/badge/Paper-PDF-red?style=flat&logo=arXiv&logoColor=red)](https://arxiv.org/pdf/2406.17803)
   [![made-with-pytorch](https://img.shields.io/badge/Made%20with-PyTorch-brightgreen)](https://pytorch.org/)
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 </div>
