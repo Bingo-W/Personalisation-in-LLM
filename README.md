@@ -1,12 +1,6 @@
 # Understanding the Role of User Profile in the Personalization of Large Language Models
 This repository provides the code for our paper titled **Empirical Analysis on User Profile in Personalized LLMs**, making the integration of our code contributions into other projects more accessible.
 
-<div align="center">
-  [![made-with-pytorch](https://img.shields.io/badge/Made%20with-PyTorch-brightgreen)](https://pytorch.org/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-</div>
-
-
 <p align="center">
   <img src="asset/firstfigure.png" width="400"></a>
   <br />
